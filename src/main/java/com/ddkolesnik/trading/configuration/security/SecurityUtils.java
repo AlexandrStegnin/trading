@@ -1,4 +1,4 @@
-package com.ddkolesnik.trading.configuration;
+package com.ddkolesnik.trading.configuration.security;
 
 import com.ddkolesnik.trading.model.AppUser;
 import com.vaadin.flow.server.ServletHelper.RequestType;

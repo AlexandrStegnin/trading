@@ -1,6 +1,6 @@
 package com.ddkolesnik.trading.model;
 
-import com.ddkolesnik.trading.configuration.SecurityUtils;
+import com.ddkolesnik.trading.configuration.security.SecurityUtils;
 import lombok.Data;
 
 import javax.persistence.*;
