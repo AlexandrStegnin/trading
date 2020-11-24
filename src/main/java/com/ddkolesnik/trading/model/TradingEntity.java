@@ -96,4 +96,7 @@ public class TradingEntity extends BaseEntity {
     @Column(name = "city")
     private String city;
 
+    @Column(name = "confirmed")
+    private boolean confirmed;
+
 }
