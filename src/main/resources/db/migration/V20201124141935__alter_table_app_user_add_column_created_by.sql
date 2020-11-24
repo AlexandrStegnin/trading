@@ -1,0 +1,1 @@
+ALTER TABLE app_user ADD COLUMN modified_by VARCHAR(45) NOT NULL DEFAULT '';
