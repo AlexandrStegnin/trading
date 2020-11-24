@@ -8,6 +8,8 @@ import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.material.Material;
 
 import static com.ddkolesnik.trading.configuration.support.Location.LOGIN_PAGE;
 import static com.ddkolesnik.trading.configuration.support.Location.TRADING_PAGE;
@@ -16,8 +18,9 @@ import static com.ddkolesnik.trading.configuration.support.Location.TRADING_PAGE
  * @author Alexandr Stegnin
  */
 
-@PageTitle(LoginView.PAGE_TITLE)
 @Route(value = LOGIN_PAGE)
+@PageTitle(LoginView.PAGE_TITLE)
+@Theme(value = Material.class, variant = Material.LIGHT)
 public class LoginView extends HorizontalLayout {
 
     protected static final String PAGE_TITLE = "АВТОРИЗАЦИЯ";
