@@ -5,9 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -34,6 +32,10 @@ public class AppUser extends BaseEntity {
     @Email(message = "Нужно указать валидный email [example@example.ru]")
     @Column(name = "email")
     private String email;
+
+    @OneToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     public AppUser(UserDetails principal) {
         this.login = principal.getUsername();
