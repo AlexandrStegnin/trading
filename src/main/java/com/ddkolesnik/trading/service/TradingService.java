@@ -34,4 +34,9 @@ public class TradingService {
     public void delete(TradingEntity tradingEntity) {
         tradingRepository.delete(tradingEntity);
     }
+
+    public void confirm(TradingEntity entity) {
+        entity.setConfirmed(true);
+        tradingRepository.save(entity);
+    }
 }
