@@ -18,7 +18,7 @@ public class Location {
     public static final String LOGIN_PAGE = "login";
     public static final String LOGOUT_PAGE = "logout";
 
-    public static final String TRADING_ROUTE = "trading";
+    public static final String TRADING_PAGE = "trading";
 
     public static final Locale LOCALE_RU = new Locale("ru", "RU");
 
