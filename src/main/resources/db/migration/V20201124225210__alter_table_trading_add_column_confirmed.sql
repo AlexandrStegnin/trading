@@ -1,0 +1,1 @@
+ALTER TABLE trading ADD COLUMN confirmed BOOL NOT NULL DEFAULT false;
