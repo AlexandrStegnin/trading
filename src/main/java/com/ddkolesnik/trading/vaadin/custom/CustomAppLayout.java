@@ -2,7 +2,6 @@ package com.ddkolesnik.trading.vaadin.custom;
 
 import com.ddkolesnik.trading.configuration.security.SecurityUtils;
 import com.ddkolesnik.trading.model.AppUser;
-import com.ddkolesnik.trading.repository.AuthRepository;
 import com.ddkolesnik.trading.service.AppUserService;
 import com.ddkolesnik.trading.vaadin.ui.LoginView;
 import com.ddkolesnik.trading.vaadin.ui.TradingView;
@@ -10,7 +9,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -18,17 +16,11 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ddkolesnik.trading.configuration.support.Location.LOGIN_PAGE;
-
 public class CustomAppLayout extends AppLayout implements BeforeEnterObserver, PageConfigurator {
-
-    @Autowired
-    private AuthRepository auth;
 
     private final Tabs tabs = new Tabs();
     private final Map<Class<? extends Component>, Tab> navigationTargetToTab = new HashMap<>();
@@ -44,7 +36,7 @@ public class CustomAppLayout extends AppLayout implements BeforeEnterObserver, P
 //            addMenuTab("ПОЛЬЗОВАТЕЛИ", UserView.class, VaadinIcon.USER.create());
 //            addMenuTab("РОЛИ", RoleView.class, VaadinIcon.SHIELD.create());
             addMenuTab("ДАННЫЕ ПО ТОРГАМ", TradingView.class, VaadinIcon.CHART.create());
-            addMenuTab("ВЫЙТИ", LoginView.class, VaadinIcon.SIGN_OUT.create());
+            addLogoutTab();
             tabs.setOrientation(Tabs.Orientation.HORIZONTAL);
         } else {
             addMenuTab("ВОЙТИ", LoginView.class, VaadinIcon.SIGN_IN.create());
@@ -57,12 +49,6 @@ public class CustomAppLayout extends AppLayout implements BeforeEnterObserver, P
         init();
     }
 
-    private void logout() {
-        Notification.show("ВЫ УСПЕШНО ВЫШЛИ ИЗ СИСТЕМЫ!", 3000, Notification.Position.TOP_END);
-        auth.logout();
-        this.getUI().ifPresent(ui -> ui.navigate(LOGIN_PAGE));
-    }
-
     protected AppUser getCurrentDbUser() {
         return currentDbUser;
     }
@@ -71,10 +57,6 @@ public class CustomAppLayout extends AppLayout implements BeforeEnterObserver, P
     public void beforeEnter(BeforeEnterEvent event) {
         Tab selectedTab = navigationTargetToTab.get(event.getNavigationTarget());
         tabs.setSelectedTab(selectedTab);
-        String tabName = selectedTab.getElement().getTextRecursively();
-        if (tabName.equalsIgnoreCase("ВЫЙТИ")) {
-            logout();
-        }
     }
 
     private void addMenuTab(String label, Class<? extends Component> target, Icon icon) {
@@ -85,6 +67,21 @@ public class CustomAppLayout extends AppLayout implements BeforeEnterObserver, P
                         .set("text-decoration", "none");
         Tab tab = new Tab(link);
         navigationTargetToTab.put(target, tab);
+        tab.getStyle()
+                .set("font-size", "16px")
+                .set("font-weight", "bold");
+        tabs.add(tab);
+    }
+
+    private void addLogoutTab() {
+        RouterLink link = new RouterLink("ВЫЙТИ", LoginView.class, "logout");
+        Icon icon = VaadinIcon.SIGN_OUT.create();
+        icon.getStyle().set("margin-left", "5px");
+        link.add(icon);
+        link.getStyle().set("color", "#6200ee")
+                .set("text-decoration", "none");
+        Tab tab = new Tab(link);
+        navigationTargetToTab.put(LoginView.class, tab);
         tab.getStyle()
                 .set("font-size", "16px")
                 .set("font-weight", "bold");

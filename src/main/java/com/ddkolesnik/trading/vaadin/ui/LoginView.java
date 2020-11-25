@@ -7,9 +7,9 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.login.AbstractLogin;
 import com.vaadin.flow.component.login.LoginOverlay;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
 
@@ -23,7 +23,7 @@ import static com.ddkolesnik.trading.configuration.support.Location.TRADING_PAGE
 @Route(value = LOGIN_PAGE)
 @PageTitle(LoginView.PAGE_TITLE)
 @Theme(value = Material.class, variant = Material.LIGHT)
-public class LoginView extends HorizontalLayout {
+public class LoginView extends HorizontalLayout implements HasUrlParameter<String> {
 
     protected static final String PAGE_TITLE = "АВТОРИЗАЦИЯ";
 
@@ -60,6 +60,19 @@ public class LoginView extends HorizontalLayout {
 
     private boolean authenticate(AbstractLogin.LoginEvent e) {
         return authRepository.authenticate(e.getUsername(), e.getPassword()).isAuthenticated();
+    }
+
+    @Override
+    public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
+        if (parameter != null && parameter.equalsIgnoreCase("logout")) {
+            logout();
+        }
+    }
+
+    private void logout() {
+        Notification.show("ВЫ УСПЕШНО ВЫШЛИ ИЗ СИСТЕМЫ!", 3000, Notification.Position.TOP_END);
+        authRepository.logout();
+        this.getUI().ifPresent(ui -> ui.navigate(LOGIN_PAGE));
     }
 
 }
