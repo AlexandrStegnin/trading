@@ -111,13 +111,14 @@ public class TradingView extends CustomAppLayout {
                 .set("border", "1px solid")
                 .set("margin-left", "auto");
         HorizontalLayout buttonsLayout = new HorizontalLayout(confirmBtn);
-        buttonsLayout.setSizeFull();
+        buttonsLayout.setWidthFull();
         buttonsLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
         VerticalLayout verticalLayout = new VerticalLayout();
         verticalLayout.add(buttonsLayout, grid);
         verticalLayout.setAlignItems(FlexComponent.Alignment.END);
+        verticalLayout.setHeightFull();
         setContent(verticalLayout);
     }
 
