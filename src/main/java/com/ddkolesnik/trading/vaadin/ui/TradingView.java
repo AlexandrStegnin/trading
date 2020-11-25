@@ -9,6 +9,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -83,7 +84,7 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
-        grid.addColumn(TradingEntity::getUrl)
+        grid.addComponentColumn(te -> new Anchor(te.getUrl(), "ПОСМОТРЕТЬ"))
                 .setHeader("ССЫЛКА")
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
