@@ -3,6 +3,7 @@ package com.ddkolesnik.trading.service;
 import com.ddkolesnik.trading.model.TradingEntity;
 import com.ddkolesnik.trading.repository.TradingRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,8 +36,12 @@ public class TradingService {
         tradingRepository.delete(tradingEntity);
     }
 
-    public void confirm(TradingEntity entity) {
-        entity.setConfirmed(true);
-        tradingRepository.save(entity);
+    @Transactional
+    public void confirm(List<String> ids) {
+        ids.forEach(id -> {
+            TradingEntity entity = tradingRepository.getOne(Long.valueOf(id));
+            entity.setConfirmed(true);
+            tradingRepository.save(entity);
+        });
     }
 }

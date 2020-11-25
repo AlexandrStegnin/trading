@@ -4,11 +4,14 @@ import com.ddkolesnik.trading.model.TradingEntity;
 import com.ddkolesnik.trading.service.AppUserService;
 import com.ddkolesnik.trading.service.TradingService;
 import com.ddkolesnik.trading.vaadin.custom.CustomAppLayout;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.NumberRenderer;
@@ -17,10 +20,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 import static com.ddkolesnik.trading.configuration.support.Location.TRADING_PAGE;
 
@@ -40,6 +40,7 @@ public class TradingView extends CustomAppLayout {
     private final ListDataProvider<TradingEntity> dataProvider;
     private final CheckboxGroup<Checkbox> checkboxGroup;
     private final Set<Checkbox> items;
+    private final Button confirmBtn;
 
     public TradingView(TradingService tradingService, AppUserService userService) {
         super(userService);
@@ -48,6 +49,7 @@ public class TradingView extends CustomAppLayout {
         this.dataProvider = new ListDataProvider<>(getAll());
         this.checkboxGroup = new CheckboxGroup<>();
         this.items = new LinkedHashSet<>();
+        this.confirmBtn = new Button("ПОДТВЕРДИТЬ ВЫДЕЛЕННЫЕ", VaadinIcon.CHECK.create(), e -> confirm());
         init();
     }
 
@@ -98,8 +100,16 @@ public class TradingView extends CustomAppLayout {
             }
         });
 
+        confirmBtn.getStyle()
+                .set("border", "1px solid")
+                .set("margin-left", "auto");
+        HorizontalLayout buttonsLayout = new HorizontalLayout(confirmBtn);
+        buttonsLayout.setSizeFull();
+        buttonsLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+
         VerticalLayout verticalLayout = new VerticalLayout();
-        verticalLayout.add(grid);
+        verticalLayout.add(buttonsLayout, grid);
         verticalLayout.setAlignItems(FlexComponent.Alignment.END);
         setContent(verticalLayout);
     }
@@ -108,13 +118,21 @@ public class TradingView extends CustomAppLayout {
         return tradingService.findAll();
     }
 
-    private void confirm(final TradingEntity entity) {
-        tradingService.confirm(entity);
+    private void confirm() {
+        Set<Checkbox> selectedCheckboxes = checkboxGroup.getSelectedItems();
+        List<String> tradingIds = new ArrayList<>();
+        for (Checkbox checkbox : selectedCheckboxes) {
+            if (checkbox.getId().isPresent()) {
+                tradingIds.add(checkbox.getId().get());
+            }
+        }
+        tradingService.confirm(tradingIds);
     }
 
     private Checkbox createCheckBox(TradingEntity entity) {
         Checkbox checkbox = new Checkbox();
         checkbox.setValue(entity.isConfirmed());
+        checkbox.setId(String.valueOf(entity.getId()));
         checkbox.addValueChangeListener(event -> {
             if (event.getValue()) {
                 checkboxGroup.select(checkbox);
