@@ -1,0 +1,1 @@
+ALTER TABLE trading ADD COLUMN lot_source VARCHAR(30);
