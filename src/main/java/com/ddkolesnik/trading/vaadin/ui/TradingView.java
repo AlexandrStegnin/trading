@@ -146,13 +146,17 @@ public class TradingView extends CustomAppLayout {
         Checkbox checkbox = new Checkbox();
         checkbox.setValue(entity.isConfirmed());
         checkbox.setId(String.valueOf(entity.getId()));
-        checkbox.addValueChangeListener(event -> {
-            if (event.getValue()) {
-                checkboxGroup.select(checkbox);
-            } else {
-                checkboxGroup.deselect(checkbox);
-            }
-        });
+        if (!entity.isConfirmed()) {
+            checkbox.addValueChangeListener(event -> {
+                if (event.getValue()) {
+                    checkboxGroup.select(checkbox);
+                } else {
+                    checkboxGroup.deselect(checkbox);
+                }
+            });
+        } else {
+            checkbox.setReadOnly(true);
+        }
         items.add(checkbox);
         checkboxGroup.setItems(items);
         return checkbox;
