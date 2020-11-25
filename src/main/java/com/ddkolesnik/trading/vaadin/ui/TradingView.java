@@ -88,7 +88,7 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
-        grid.addComponentColumn(te -> new Anchor(te.getUrl(), "ПОСМОТРЕТЬ"))
+        grid.addComponentColumn(this::createAnchor)
                 .setHeader("ССЫЛКА")
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
@@ -185,6 +185,12 @@ public class TradingView extends CustomAppLayout {
     private void showOnlyConfirmed() {
         dataProvider.clearFilters();
         dataProvider.addFilter(tradingEntity -> Objects.equals(tradingEntity.isConfirmed(), true));
+    }
+
+    private Anchor createAnchor(TradingEntity entity) {
+        Anchor anchor = new Anchor(entity.getUrl(), "ПОКАЗАТЬ");
+        anchor.setTarget("_blank");
+        return anchor;
     }
 
 }
