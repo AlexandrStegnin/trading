@@ -184,7 +184,7 @@ public class TradingView extends CustomAppLayout {
 
     private void showOnlyConfirmed() {
         dataProvider.clearFilters();
-        dataProvider.addFilter(tradingEntity -> Objects.equals(tradingEntity.isConfirmed(), true));
+        dataProvider.addFilter(TradingEntity::isConfirmed);
     }
 
     private Anchor createAnchor(TradingEntity entity) {
