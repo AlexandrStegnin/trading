@@ -77,7 +77,10 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
-        //todo источник
+        grid.addColumn(TradingEntity::getLotSource)
+                .setHeader("ИСТОЧНИК")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(1);
 
         grid.addColumn(TradingEntity::getUrl)
                 .setHeader("ССЫЛКА")

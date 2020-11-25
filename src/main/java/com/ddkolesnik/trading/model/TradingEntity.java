@@ -107,4 +107,11 @@ public class TradingEntity extends BaseEntity {
      */
     @Column(name = "area")
     private String area;
+
+    /**
+     * Источник
+     */
+    @Column(name = "lot_source")
+    private String lotSource;
+
 }
