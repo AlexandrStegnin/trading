@@ -34,6 +34,8 @@ import static com.ddkolesnik.trading.configuration.support.Location.TRADING_PAGE
 @Theme(value = Material.class, variant = Material.LIGHT)
 public class TradingView extends CustomAppLayout {
 
+    private final String SHOW_CONFIRMED = "ПОКАЗАТЬ ТОЛЬКО ПОДТВЕРЖДЁННЫЕ";
+
     protected static final String PAGE_TITLE = "ДАННЫЕ ПО ТОРГАМ";
 
     private final TradingService tradingService;
@@ -42,6 +44,7 @@ public class TradingView extends CustomAppLayout {
     private final CheckboxGroup<Checkbox> checkboxGroup;
     private final Set<Checkbox> items;
     private final Button confirmBtn;
+    private final Button showConfirmed;
 
     public TradingView(TradingService tradingService, AppUserService userService) {
         super(userService);
@@ -51,6 +54,7 @@ public class TradingView extends CustomAppLayout {
         this.checkboxGroup = new CheckboxGroup<>();
         this.items = new LinkedHashSet<>();
         this.confirmBtn = new Button("ПОДТВЕРДИТЬ ВЫДЕЛЕННЫЕ", VaadinIcon.CHECK.create(), e -> confirm());
+        this.showConfirmed = new Button(SHOW_CONFIRMED, VaadinIcon.CHECK_SQUARE_O.create(), e -> toggle());
         init();
     }
 
@@ -111,7 +115,7 @@ public class TradingView extends CustomAppLayout {
         confirmBtn.getStyle()
                 .set("border", "1px solid")
                 .set("margin-left", "auto");
-        HorizontalLayout buttonsLayout = new HorizontalLayout(confirmBtn);
+        HorizontalLayout buttonsLayout = new HorizontalLayout(showConfirmed, confirmBtn);
         buttonsLayout.setWidthFull();
         buttonsLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
@@ -164,6 +168,23 @@ public class TradingView extends CustomAppLayout {
             }
         });
         return selectAll;
+    }
+
+    private void toggle() {
+        if (showConfirmed.getText().equals(SHOW_CONFIRMED)) {
+            showConfirmed.setIcon(VaadinIcon.THIN_SQUARE.create());
+            showConfirmed.setText("ПОКАЗАТЬ ВСЕ ОБЪЯВЛЕНИЯ");
+            showOnlyConfirmed();
+        } else {
+            showConfirmed.setIcon(VaadinIcon.CHECK_SQUARE_O.create());
+            showConfirmed.setText(SHOW_CONFIRMED);
+            dataProvider.clearFilters();
+        }
+    }
+
+    private void showOnlyConfirmed() {
+        dataProvider.clearFilters();
+        dataProvider.addFilter(tradingEntity -> Objects.equals(tradingEntity.isConfirmed(), true));
     }
 
 }

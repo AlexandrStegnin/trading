@@ -89,7 +89,6 @@
         </dependency>
 
         <!-- For use JWT authorization and authentication -->
-
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
