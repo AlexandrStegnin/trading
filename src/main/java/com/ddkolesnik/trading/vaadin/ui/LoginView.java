@@ -2,7 +2,9 @@ package com.ddkolesnik.trading.vaadin.ui;
 
 import com.ddkolesnik.trading.configuration.support.Internationalization;
 import com.ddkolesnik.trading.repository.AuthRepository;
+import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.login.AbstractLogin;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -34,9 +36,9 @@ public class LoginView extends HorizontalLayout {
 
     private void init() {
         LoginOverlay loginForm = new LoginOverlay();
-//        Div title = new Div();
-//        title.add(VaadinViewUtils.getLogo(350));
-//        loginForm.setTitle(title);
+        Div title = new Div();
+        title.add(VaadinViewUtils.getLogo(350));
+        loginForm.setTitle(title);
         loginForm.setDescription("");
         loginForm.setOpened(true);
         loginForm.setI18n(Internationalization.russianI18n());
