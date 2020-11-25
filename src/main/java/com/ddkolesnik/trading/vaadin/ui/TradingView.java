@@ -11,6 +11,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
@@ -18,6 +19,7 @@ import com.vaadin.flow.theme.material.Material;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import static com.ddkolesnik.trading.configuration.support.Location.TRADING_PAGE;
@@ -64,7 +66,8 @@ public class TradingView extends CustomAppLayout {
 
         //todo квадратура
 
-        grid.addColumn(TradingEntity::getPrice)
+        grid.addColumn(new NumberRenderer<>(TradingEntity::getPrice, "%(,.2f руб",
+                Locale.forLanguageTag("RU"), "0.00 руб"))
                 .setHeader("СТОИМОСТЬ")
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
