@@ -66,7 +66,10 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
-        //todo квадратура
+        grid.addColumn(TradingEntity::getArea)
+                .setHeader("ПЛОЩАДЬ")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(1);
 
         grid.addColumn(new NumberRenderer<>(TradingEntity::getPrice, "%(,.2f руб",
                 Locale.forLanguageTag("RU"), "0.00 руб"))
