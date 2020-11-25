@@ -55,8 +55,9 @@ public class TradingView extends CustomAppLayout {
 
     private void init() {
         grid.setDataProvider(dataProvider);
+        grid.setMultiSort(true);
 
-        grid.addColumn(TradingEntity::getCity)
+        grid.addColumn(TradingEntity::getCity, "ГОРОД")
                 .setHeader("ГОРОД")
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
@@ -66,7 +67,7 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
-        grid.addColumn(TradingEntity::getArea)
+        grid.addColumn(TradingEntity::getArea, "ПЛОЩАДЬ")
                 .setHeader("ПЛОЩАДЬ")
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
@@ -77,7 +78,7 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
-        grid.addColumn(TradingEntity::getLotSource)
+        grid.addColumn(TradingEntity::getLotSource, "ИСТОЧНИК")
                 .setHeader("ИСТОЧНИК")
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
