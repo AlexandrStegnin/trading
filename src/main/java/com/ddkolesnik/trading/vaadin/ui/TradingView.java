@@ -93,6 +93,11 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
+        grid.addColumn(TradingEntity::getSeller, "ПРОДАВЕЦ")
+                .setHeader("ПРОДАВЕЦ")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(1);
+
         Checkbox selectAll = createSelectAll();
 
         grid.addComponentColumn(this::createCheckBox)
