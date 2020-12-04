@@ -20,6 +20,8 @@ public class Location {
 
     public static final String TRADING_PAGE = "trading";
 
+    public static final String ADDRESS_PAGE = "addresses";
+
     public static final Locale LOCALE_RU = new Locale("ru", "RU");
 
     public static final String LOGOUT_URL = PATH_SEPARATOR + LOGOUT_PAGE;
