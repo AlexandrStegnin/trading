@@ -34,7 +34,7 @@ public class CustomAppLayout extends AppLayout implements BeforeEnterObserver, P
 //            addMenuTab("ПОЛЬЗОВАТЕЛИ", UserView.class, VaadinIcon.USER.create());
 //            addMenuTab("РОЛИ", RoleView.class, VaadinIcon.SHIELD.create());
             addMenuTab("ДАННЫЕ ПО ТОРГАМ", TradingView.class, VaadinIcon.CHART.create());
-            addMenuTab("АДМИНКА", AddressView.class, VaadinIcon.COG.create());
+            addMenuTab("ПОИСК ПО АДРЕСАМ", AddressView.class, VaadinIcon.MAP_MARKER.create());
             addLogoutTab();
             tabs.setOrientation(Tabs.Orientation.HORIZONTAL);
         } else {
