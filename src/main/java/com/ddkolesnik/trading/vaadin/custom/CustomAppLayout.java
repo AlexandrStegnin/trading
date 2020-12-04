@@ -3,6 +3,7 @@ package com.ddkolesnik.trading.vaadin.custom;
 import com.ddkolesnik.trading.configuration.security.SecurityUtils;
 import com.ddkolesnik.trading.model.AppUser;
 import com.ddkolesnik.trading.service.AppUserService;
+import com.ddkolesnik.trading.vaadin.ui.AddressView;
 import com.ddkolesnik.trading.vaadin.ui.LoginView;
 import com.ddkolesnik.trading.vaadin.ui.TradingView;
 import com.vaadin.flow.component.Component;
@@ -29,13 +30,11 @@ public class CustomAppLayout extends AppLayout implements BeforeEnterObserver, P
 
     private void init() {
         tabs.setSizeFull();
-//        Image img = VaadinViewUtils.getLogo(51);
-//        addToNavbar(img);
         if (SecurityUtils.isUserLoggedIn()) {
-//            addMenuTab("АДМИНКА", AdminView.class, VaadinIcon.COG.create());
 //            addMenuTab("ПОЛЬЗОВАТЕЛИ", UserView.class, VaadinIcon.USER.create());
 //            addMenuTab("РОЛИ", RoleView.class, VaadinIcon.SHIELD.create());
             addMenuTab("ДАННЫЕ ПО ТОРГАМ", TradingView.class, VaadinIcon.CHART.create());
+            addMenuTab("АДМИНКА", AddressView.class, VaadinIcon.COG.create());
             addLogoutTab();
             tabs.setOrientation(Tabs.Orientation.HORIZONTAL);
         } else {
