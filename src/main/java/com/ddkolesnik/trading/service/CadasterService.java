@@ -1,6 +1,10 @@
 package com.ddkolesnik.trading.service;
 
+import com.ddkolesnik.trading.model.CadasterEntity;
+import com.ddkolesnik.trading.repository.CadasterRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author Alexandr Stegnin
@@ -8,4 +12,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CadasterService {
+
+    private final CadasterRepository cadasterRepository;
+
+    public CadasterService(CadasterRepository cadasterRepository) {
+        this.cadasterRepository = cadasterRepository;
+    }
+
+    public List<CadasterEntity> findAll() {
+        return cadasterRepository.findAll();
+    }
+
 }
