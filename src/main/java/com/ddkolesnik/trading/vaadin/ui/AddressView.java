@@ -1,11 +1,24 @@
 package com.ddkolesnik.trading.vaadin.ui;
 
+import com.ddkolesnik.trading.model.CadasterEntity;
 import com.ddkolesnik.trading.service.AppUserService;
+import com.ddkolesnik.trading.service.CadasterService;
 import com.ddkolesnik.trading.vaadin.custom.CustomAppLayout;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
+
+import java.util.List;
 
 import static com.ddkolesnik.trading.configuration.support.Location.ADDRESS_PAGE;
 
@@ -20,7 +33,68 @@ public class AddressView extends CustomAppLayout {
 
     protected static final String PAGE_TITLE = "ДАННЫЕ ПО АДРЕСАМ";
 
-    public AddressView(AppUserService userService) {
+    private final CadasterService cadasterService;
+    private final Grid<CadasterEntity> grid;
+    private final ListDataProvider<CadasterEntity> dataProvider;
+    private final TextField search;
+    private final Button searchBtn;
+
+    public AddressView(AppUserService userService, CadasterService cadasterService) {
         super(userService);
+        this.cadasterService = cadasterService;
+        this.grid = new Grid<>();
+        this.dataProvider = new ListDataProvider<>(getAll());
+        this.search = new TextField("ЗАПРОСИТЬ ИНФОРМАЦИЮ ПО АДРЕСУ");
+        this.searchBtn = new Button("ЗАПРОСИТЬ", VaadinIcon.SEARCH.create(), e -> search(search.getValue()));
+        init();
     }
+
+    private List<CadasterEntity> getAll() {
+        return cadasterService.findAll();
+    }
+
+    private void init() {
+        grid.setDataProvider(dataProvider);
+        grid.setMultiSort(true);
+
+        grid.addColumn(CadasterEntity::getCadNumber)
+                .setHeader("КАДАСТРОВЫЙ НОМЕР")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(1);
+
+        grid.addColumn(CadasterEntity::getAddress, "АДРЕС")
+                .setHeader("АДРЕС")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(1);
+
+        grid.addColumn(CadasterEntity::getType, "ТИП")
+                .setHeader("ТИП")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(1);
+
+        grid.addColumn(CadasterEntity::getArea)
+                .setHeader("ПЛОЩАДЬ")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(1);
+
+        grid.addColumn(CadasterEntity::getCategory, "КАТЕГОРИЯ")
+                .setHeader("КАТЕГОРИЯ")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(1);
+
+        search.setWidth("90%");
+        HorizontalLayout searchLayout = new HorizontalLayout();
+        searchLayout.setWidthFull();
+        searchLayout.add(search, searchBtn);
+        VerticalLayout verticalLayout = new VerticalLayout();
+        verticalLayout.add(searchLayout, grid);
+        verticalLayout.setAlignItems(FlexComponent.Alignment.END);
+        verticalLayout.setHeightFull();
+        setContent(verticalLayout);
+    }
+
+    private void search(String address) {
+
+    }
+
 }
