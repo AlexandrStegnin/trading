@@ -1,5 +1,6 @@
 package com.ddkolesnik.trading.model;
 
+import com.ddkolesnik.trading.model.dto.CadasterDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -13,21 +14,21 @@ import java.util.List;
 public class RosreestrObject {
 
     @JsonProperty("lands")
-    private List<CadasterEntity> lands;
+    private List<CadasterDTO> lands;
 
     @JsonProperty("buildings")
-    private List<CadasterEntity> buildings;
+    private List<CadasterDTO> buildings;
 
     @JsonProperty("rooms")
-    private List<CadasterEntity> rooms;
+    private List<CadasterDTO> rooms;
 
     @JsonProperty("constructions")
-    private List<CadasterEntity> constructions;
+    private List<CadasterDTO> constructions;
 
     @JsonProperty("quarters")
-    private List<CadasterEntity> quarters;
+    private List<CadasterDTO> quarters;
 
     @JsonProperty("others")
-    private List<CadasterEntity> others;
+    private List<CadasterDTO> others;
 
 }
