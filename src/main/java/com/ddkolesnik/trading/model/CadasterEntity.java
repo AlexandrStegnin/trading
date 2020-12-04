@@ -1,9 +1,9 @@
 package com.ddkolesnik.trading.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -17,19 +17,22 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 public class CadasterEntity extends BaseEntity {
 
-    @JsonProperty("ADDRESS")
+    @Column(name = "address")
     private String address;
 
-    @JsonProperty("CADNOMER")
+    @Column(name = "cad_number")
     private String cadNumber;
 
-    @JsonProperty("TYPE")
+    @Column(name = "type")
     private String type;
 
-    @JsonProperty("AREA")
+    @Column(name = "area")
     private String area;
 
-    @JsonProperty("CATEGORY")
+    @Column(name = "category")
     private String category;
+
+    @Column(name = "tag")
+    private String tag;
 
 }
