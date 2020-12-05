@@ -1,6 +1,5 @@
 package com.ddkolesnik.trading.model;
 
-import com.ddkolesnik.trading.configuration.security.SecurityUtils;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,6 +14,7 @@ import java.time.Instant;
 public class BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "creation_time")
@@ -29,13 +29,11 @@ public class BaseEntity {
     @PrePersist
     public void prePersist() {
         this.creationTime = Instant.now();
-        this.modifiedBy = SecurityUtils.getUsername();
     }
 
     @PreUpdate
     public void preUpdate() {
         this.modifiedTime = Instant.now();
-        this.modifiedBy = SecurityUtils.getUsername();
     }
 
 }
