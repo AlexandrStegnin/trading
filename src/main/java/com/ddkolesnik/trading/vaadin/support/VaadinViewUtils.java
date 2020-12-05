@@ -8,6 +8,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.server.InputStreamFactory;
 import com.vaadin.flow.server.StreamResource;
 import org.apache.commons.io.FileUtils;
@@ -121,6 +122,11 @@ public class VaadinViewUtils {
         Image img = new Image("icons/logo.png", "ДДКолесникъ");
         img.setHeight(sizeInPx + "px");
         return img;
+    }
+
+    public static void showNotification(String text) {
+        Notification notification = new Notification(text, 2_000, Notification.Position.TOP_END);
+        notification.open();
     }
 
 }
