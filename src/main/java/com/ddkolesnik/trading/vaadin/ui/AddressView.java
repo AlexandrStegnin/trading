@@ -3,7 +3,10 @@ package com.ddkolesnik.trading.vaadin.ui;
 import com.ddkolesnik.trading.model.CadasterEntity;
 import com.ddkolesnik.trading.service.AppUserService;
 import com.ddkolesnik.trading.service.CadasterService;
+import com.ddkolesnik.trading.service.SearchService;
 import com.ddkolesnik.trading.vaadin.custom.CustomAppLayout;
+import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
@@ -11,10 +14,12 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
 
@@ -26,6 +31,7 @@ import static com.ddkolesnik.trading.configuration.support.Location.ADDRESS_PAGE
  * @author Alexandr Stegnin
  */
 
+@Push(PushMode.AUTOMATIC)
 @Route(value = ADDRESS_PAGE)
 @PageTitle(AddressView.PAGE_TITLE)
 @Theme(value = Material.class, variant = Material.LIGHT)
@@ -38,14 +44,16 @@ public class AddressView extends CustomAppLayout {
     private final ListDataProvider<CadasterEntity> dataProvider;
     private final TextField search;
     private final Button searchBtn;
+    private final SearchService searchService;
 
-    public AddressView(AppUserService userService, CadasterService cadasterService) {
+    public AddressView(AppUserService userService, CadasterService cadasterService, SearchService searchService) {
         super(userService);
         this.cadasterService = cadasterService;
         this.grid = new Grid<>();
         this.dataProvider = new ListDataProvider<>(getAll());
         this.search = new TextField("ЗАПРОСИТЬ ИНФОРМАЦИЮ ПО АДРЕСУ");
         this.searchBtn = new Button("ЗАПРОСИТЬ", VaadinIcon.SEARCH.create(), e -> search(search.getValue()));
+        this.searchService = searchService;
         init();
     }
 
@@ -94,7 +102,8 @@ public class AddressView extends CustomAppLayout {
     }
 
     private void search(String address) {
-
+        VaadinViewUtils.showNotification("Запрос отправлен. Мы сообщим, когда процесс завершится.");
+        searchService.search(address, UI.getCurrent(), dataProvider);
     }
 
 }
