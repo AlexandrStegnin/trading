@@ -23,4 +23,7 @@ public class CadasterService {
         return cadasterRepository.findAll();
     }
 
+    public void create(CadasterEntity entity) {
+        cadasterRepository.save(entity);
+    }
 }
