@@ -26,4 +26,8 @@ public class CadasterService {
     public void create(CadasterEntity entity) {
         cadasterRepository.save(entity);
     }
+
+    public List<CadasterEntity> findByTag(String address) {
+        return cadasterRepository.findByTag(address);
+    }
 }
