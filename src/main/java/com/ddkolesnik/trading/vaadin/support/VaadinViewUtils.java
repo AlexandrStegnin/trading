@@ -47,6 +47,14 @@ public class VaadinViewUtils {
         return actions;
     }
 
+    public static Div createDetailsColumnButton(ComponentEventListener<ClickEvent<Button>> clickListener) {
+        Div actions = new Div();
+        Button details = new Button("ПОДРОБНЕЙ");
+        details.addClickListener(clickListener);
+        actions.add(details);
+        return actions;
+    }
+
     public static Dialog initDialog() {
         Dialog dialog = new Dialog();
         dialog.setCloseOnEsc(false);
