@@ -38,6 +38,9 @@ public class CadasterEntity extends BaseEntity {
     @Column(name = "tag")
     private String tag;
 
+    @Column(name = "floor")
+    private String floor;
+
     public CadasterEntity(CadasterDTO dto, String tag) {
         this.address = dto.getAddress();
         this.cadNumber = dto.getCadNumber();
