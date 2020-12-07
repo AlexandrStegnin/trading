@@ -85,11 +85,6 @@ public class AddressView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
-        grid.addColumn(CadasterEntity::getCategory, "КАТЕГОРИЯ")
-                .setHeader("КАТЕГОРИЯ")
-                .setTextAlign(ColumnTextAlign.CENTER)
-                .setFlexGrow(1);
-
         grid.addColumn(CadasterEntity::getFloor)
                 .setHeader("ЭТАЖ")
                 .setTextAlign(ColumnTextAlign.CENTER)
