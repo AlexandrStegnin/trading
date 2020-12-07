@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 /**
  * @author Alexandr Stegnin
  */
@@ -40,7 +42,11 @@ public class SearchService {
      * @param address полный адрес
      */
     public void search(String address, UI ui, ListDataProvider<CadasterEntity> dataProvider) {
-        RosreestrRequest request = new RosreestrRequest();
+        List<CadasterEntity> entities = cadasterService.findByTag(address);
+        if (!entities.isEmpty()) {
+            return;
+        }
+        RosreestrRequest request = new RosreestrRequest("normal", address, 1);
         request.setQuery(address);
         Mono<RosreestrResponse> mono = webClient.post()
                 .uri("/search")
