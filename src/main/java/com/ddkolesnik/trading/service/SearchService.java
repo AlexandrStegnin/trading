@@ -78,17 +78,30 @@ public class SearchService {
         });
     }
 
-    public void getEgrnDetails(CadasterEntity cadasterEntity, UI ui) {
-        RosreestrRequest request = new RosreestrRequest(cadasterEntity.getCadNumber());
+    /**
+     * Получить детализированную информацию по кадастровому номеру
+     *
+     * @param cadaster сущность
+     * @param ui ссылка на представление, чтобы можно было оповестить пользователя о завершении
+     */
+    public void getEgrnDetails(CadasterEntity cadaster, UI ui) {
+        RosreestrRequest request = new RosreestrRequest(cadaster.getCadNumber());
         Mono<EgrnResponse> mono = webClient.post()
                 .uri("/objectInfoFull")
                 .body(Mono.just(request), RosreestrRequest.class)
                 .retrieve()
                 .bodyToMono(EgrnResponse.class);
-        mono.subscribe(response -> updateCadasterEntity(response, cadasterEntity, ui));
+        mono.subscribe(response -> updateCadaster(response, cadaster, ui));
     }
 
-    private void updateCadasterEntity(EgrnResponse response, CadasterEntity entity, UI ui) {
+    /**
+     * Обновить запись в базе данных
+     *
+     * @param response ответ с детальной информацией
+     * @param entity сущность для обновления
+     * @param ui ссылка на представление, чтобы можно было оповестить пользователя о завершении
+     */
+    private void updateCadaster(EgrnResponse response, CadasterEntity entity, UI ui) {
         if (response != null) {
             EgrnDTO egrnDTO = response.getEgrnDTO();
             if (egrnDTO != null) {
