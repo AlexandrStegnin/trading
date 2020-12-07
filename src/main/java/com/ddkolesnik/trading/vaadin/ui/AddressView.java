@@ -11,6 +11,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -90,6 +91,16 @@ public class AddressView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
+        grid.addColumn(CadasterEntity::getFloor)
+                .setHeader("ЭТАЖ")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(1);
+
+        grid.addComponentColumn(cadasterEntity -> VaadinViewUtils.createDetailsColumnButton(event -> getDetails(cadasterEntity)))
+                .setHeader("ПОДРОБНОСТИ")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(1);
+
         search.setWidth("90%");
         HorizontalLayout searchLayout = new HorizontalLayout();
         searchLayout.setWidthFull();
@@ -104,6 +115,10 @@ public class AddressView extends CustomAppLayout {
     private void search(String address) {
         VaadinViewUtils.showNotification("Запрос отправлен. Мы сообщим, когда процесс завершится.");
         searchService.search(address, UI.getCurrent(), dataProvider);
+    }
+
+    private void getDetails(CadasterEntity entity) {
+        Notification.show(entity.getCadNumber());
     }
 
 }
