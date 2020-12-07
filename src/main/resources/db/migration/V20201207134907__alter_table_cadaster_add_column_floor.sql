@@ -1,0 +1,1 @@
+ALTER TABLE cadaster ADD COLUMN floor VARCHAR(5);
