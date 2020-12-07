@@ -2,8 +2,11 @@ package com.ddkolesnik.trading.service;
 
 import com.ddkolesnik.trading.configuration.security.SecurityUtils;
 import com.ddkolesnik.trading.model.CadasterEntity;
+import com.ddkolesnik.trading.model.EgrnResponse;
 import com.ddkolesnik.trading.model.RosreestrRequest;
 import com.ddkolesnik.trading.model.RosreestrResponse;
+import com.ddkolesnik.trading.model.dto.EgrnDTO;
+import com.ddkolesnik.trading.model.dto.EgrnDetailsDTO;
 import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -74,4 +77,29 @@ public class SearchService {
             dataProvider.refreshAll();
         });
     }
+
+    public void getEgrnDetails(CadasterEntity cadasterEntity, UI ui) {
+        RosreestrRequest request = new RosreestrRequest(cadasterEntity.getCadNumber());
+        Mono<EgrnResponse> mono = webClient.post()
+                .uri("/objectInfoFull")
+                .body(Mono.just(request), RosreestrRequest.class)
+                .retrieve()
+                .bodyToMono(EgrnResponse.class);
+        mono.subscribe(response -> updateCadasterEntity(response, cadasterEntity, ui));
+    }
+
+    private void updateCadasterEntity(EgrnResponse response, CadasterEntity entity, UI ui) {
+        if (response != null) {
+            EgrnDTO egrnDTO = response.getEgrnDTO();
+            if (egrnDTO != null) {
+                EgrnDetailsDTO detailsDTO = egrnDTO.getDetails();
+                entity.setType(detailsDTO.getOksType());
+                entity.setFloor(detailsDTO.getFloor());
+                cadasterService.update(entity);
+            }
+
+        }
+        ui.access((Command) () -> VaadinViewUtils.showNotification("Данные успешно получены. Необходимо перезагрузить страницу."));
+    }
+
 }
