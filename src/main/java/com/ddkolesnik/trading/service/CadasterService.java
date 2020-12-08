@@ -4,6 +4,7 @@ import com.ddkolesnik.trading.model.CadasterEntity;
 import com.ddkolesnik.trading.repository.CadasterRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,4 +35,9 @@ public class CadasterService {
     public void update(CadasterEntity entity) {
         cadasterRepository.save(entity);
     }
+
+    public void update(Collection<CadasterEntity> cadasterEntities) {
+        cadasterRepository.saveAll(cadasterEntities);
+    }
+
 }
