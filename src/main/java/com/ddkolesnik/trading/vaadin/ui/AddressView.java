@@ -5,12 +5,11 @@ import com.ddkolesnik.trading.service.AppUserService;
 import com.ddkolesnik.trading.service.CadasterService;
 import com.ddkolesnik.trading.service.SearchService;
 import com.ddkolesnik.trading.vaadin.custom.CustomAppLayout;
-import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -22,6 +21,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.communication.PushMode;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -31,6 +31,7 @@ import static com.ddkolesnik.trading.configuration.support.Location.ADDRESS_PAGE
  * @author Alexandr Stegnin
  */
 
+@Slf4j
 @Push(PushMode.AUTOMATIC)
 @Route(value = ADDRESS_PAGE)
 @PageTitle(AddressView.PAGE_TITLE)
@@ -90,11 +91,6 @@ public class AddressView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
-        grid.addComponentColumn(cadasterEntity -> VaadinViewUtils.createDetailsColumnButton(event -> getDetails(cadasterEntity)))
-                .setHeader("ПОДРОБНОСТИ")
-                .setTextAlign(ColumnTextAlign.CENTER)
-                .setFlexGrow(1);
-
         search.setWidth("90%");
         HorizontalLayout searchLayout = new HorizontalLayout();
         searchLayout.setWidthFull();
@@ -107,12 +103,12 @@ public class AddressView extends CustomAppLayout {
     }
 
     private void search(String address) {
-        VaadinViewUtils.showNotification("Запрос отправлен. Мы сообщим, когда процесс завершится.");
-        searchService.search(address, UI.getCurrent(), dataProvider);
-    }
-
-    private void getDetails(CadasterEntity entity) {
-        searchService.getEgrnDetails(entity, UI.getCurrent());
+        Notification notification = new Notification("Запрос отправлен!", 2_000);
+        notification.open();
+        searchService.search(address);
+        searchService.updateEgrnDetails(address);
+        notification = new Notification("Данные обновлены!", 2_000);
+        notification.open();
     }
 
 }
