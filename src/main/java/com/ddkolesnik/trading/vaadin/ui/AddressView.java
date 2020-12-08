@@ -107,6 +107,7 @@ public class AddressView extends CustomAppLayout {
     private void search(String address) {
         if (searchService.search(address)) {
             searchService.updateEgrnDetails(address);
+            dataProvider.refreshAll();
             Notification notification = new Notification("Данные обновлены!", 2_000);
             notification.open();
         } else {
