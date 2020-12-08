@@ -3,8 +3,6 @@ package com.ddkolesnik.trading.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * @author Alexandr Stegnin
  */
@@ -26,6 +24,7 @@ public class RosreestrResponse {
 
     private String region;
 
-    private List<String> error;
+    @JsonProperty("error")
+    private Object error;
 
 }
