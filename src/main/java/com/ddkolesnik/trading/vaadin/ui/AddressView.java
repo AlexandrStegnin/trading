@@ -46,6 +46,7 @@ public class AddressView extends CustomAppLayout {
     private final ComboBox<String> search;
     private final Button searchBtn;
     private final SearchService searchService;
+    private String customSearchText;
 
     public AddressView(AppUserService userService, CadasterService cadasterService, SearchService searchService) {
         super(userService);
@@ -102,17 +103,19 @@ public class AddressView extends CustomAppLayout {
         setContent(verticalLayout);
         search.setAllowCustomValue(true);
         search.setItems(getTags());
+        search.addCustomValueSetListener(listener -> customSearchText = listener.getDetail());
     }
 
     private void search(String address) {
-        if (searchService.search(address)) {
-            searchService.updateEgrnDetails(address);
+        String searchText = address == null ? customSearchText : address;
+        if (searchService.search(searchText)) {
+            searchService.updateEgrnDetails(searchText);
             dataProvider.refreshAll();
             Notification notification = new Notification("Данные обновлены!", 2_000);
             notification.open();
         } else {
             dataProvider.clearFilters();
-            dataProvider.addFilter(cadEntity -> cadEntity.getTag().equalsIgnoreCase(address));
+            dataProvider.addFilter(cadEntity -> cadEntity.getTag().equalsIgnoreCase(searchText));
         }
     }
 
