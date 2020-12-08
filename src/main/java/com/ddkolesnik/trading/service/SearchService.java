@@ -66,7 +66,32 @@ public class SearchService {
      * @param rosreestrResponse ответ от росреестра
      */
     private void saveCadasterAddresses(RosreestrResponse rosreestrResponse, String address, String userName) {
+        rosreestrResponse.getObject().getLands().forEach(room -> {
+            CadasterEntity entity = new CadasterEntity(room, address);
+            entity.setModifiedBy(userName);
+            cadasterService.create(entity);
+        });
+        rosreestrResponse.getObject().getBuildings().forEach(room -> {
+            CadasterEntity entity = new CadasterEntity(room, address);
+            entity.setModifiedBy(userName);
+            cadasterService.create(entity);
+        });
         rosreestrResponse.getObject().getRooms().forEach(room -> {
+            CadasterEntity entity = new CadasterEntity(room, address);
+            entity.setModifiedBy(userName);
+            cadasterService.create(entity);
+        });
+        rosreestrResponse.getObject().getConstructions().forEach(room -> {
+            CadasterEntity entity = new CadasterEntity(room, address);
+            entity.setModifiedBy(userName);
+            cadasterService.create(entity);
+        });
+        rosreestrResponse.getObject().getQuarters().forEach(room -> {
+            CadasterEntity entity = new CadasterEntity(room, address);
+            entity.setModifiedBy(userName);
+            cadasterService.create(entity);
+        });
+        rosreestrResponse.getObject().getOthers().forEach(room -> {
             CadasterEntity entity = new CadasterEntity(room, address);
             entity.setModifiedBy(userName);
             cadasterService.create(entity);
