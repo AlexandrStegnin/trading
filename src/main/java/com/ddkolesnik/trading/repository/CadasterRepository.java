@@ -2,6 +2,7 @@ package com.ddkolesnik.trading.repository;
 
 import com.ddkolesnik.trading.model.CadasterEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,5 +15,8 @@ import java.util.List;
 public interface CadasterRepository extends JpaRepository<CadasterEntity, Long> {
 
     List<CadasterEntity> findByTag(String tag);
+
+    @Query("SELECT DISTINCT ce.tag FROM CadasterEntity ce")
+    List<String> getTags();
 
 }

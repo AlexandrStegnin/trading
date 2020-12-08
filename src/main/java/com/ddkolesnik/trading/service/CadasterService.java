@@ -40,4 +40,8 @@ public class CadasterService {
         cadasterRepository.saveAll(cadasterEntities);
     }
 
+    public List<String> getTags() {
+        return cadasterRepository.getTags();
+    }
+
 }
