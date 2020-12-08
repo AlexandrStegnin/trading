@@ -6,6 +6,7 @@ import com.ddkolesnik.trading.service.CadasterService;
 import com.ddkolesnik.trading.service.SearchService;
 import com.ddkolesnik.trading.vaadin.custom.CustomAppLayout;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -14,7 +15,6 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -43,7 +43,7 @@ public class AddressView extends CustomAppLayout {
     private final CadasterService cadasterService;
     private final Grid<CadasterEntity> grid;
     private final ListDataProvider<CadasterEntity> dataProvider;
-    private final TextField search;
+    private final ComboBox<String> search;
     private final Button searchBtn;
     private final SearchService searchService;
 
@@ -52,7 +52,7 @@ public class AddressView extends CustomAppLayout {
         this.cadasterService = cadasterService;
         this.grid = new Grid<>();
         this.dataProvider = new ListDataProvider<>(getAll());
-        this.search = new TextField("ЗАПРОСИТЬ ИНФОРМАЦИЮ ПО АДРЕСУ");
+        this.search = new ComboBox<>("ЗАПРОСИТЬ ИНФОРМАЦИЮ ПО АДРЕСУ");
         this.searchBtn = new Button("ЗАПРОСИТЬ", VaadinIcon.SEARCH.create(), e -> search(search.getValue()));
         this.searchService = searchService;
         init();
@@ -100,13 +100,23 @@ public class AddressView extends CustomAppLayout {
         verticalLayout.setAlignItems(FlexComponent.Alignment.END);
         verticalLayout.setHeightFull();
         setContent(verticalLayout);
+        search.setAllowCustomValue(true);
+        search.setItems(getTags());
     }
 
     private void search(String address) {
-        searchService.search(address);
-        searchService.updateEgrnDetails(address);
-        Notification notification = new Notification("Данные обновлены!", 2_000);
-        notification.open();
+        if (searchService.search(address)) {
+            searchService.updateEgrnDetails(address);
+            Notification notification = new Notification("Данные обновлены!", 2_000);
+            notification.open();
+        } else {
+            dataProvider.clearFilters();
+            dataProvider.addFilter(cadEntity -> cadEntity.getTag().equalsIgnoreCase(address));
+        }
+    }
+
+    private List<String> getTags() {
+        return cadasterService.getTags();
     }
 
 }
