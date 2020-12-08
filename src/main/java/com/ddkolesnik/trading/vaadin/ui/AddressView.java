@@ -5,12 +5,12 @@ import com.ddkolesnik.trading.service.AppUserService;
 import com.ddkolesnik.trading.service.CadasterService;
 import com.ddkolesnik.trading.service.SearchService;
 import com.ddkolesnik.trading.vaadin.custom.CustomAppLayout;
+import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -111,8 +111,7 @@ public class AddressView extends CustomAppLayout {
         if (searchService.search(searchText)) {
             searchService.updateEgrnDetails(searchText);
             dataProvider.refreshAll();
-            Notification notification = new Notification("Данные обновлены!", 2_000);
-            notification.open();
+            VaadinViewUtils.showNotification("Данные обновлены!");
         } else {
             dataProvider.clearFilters();
             dataProvider.addFilter(cadEntity -> cadEntity.getTag().equalsIgnoreCase(searchText));
