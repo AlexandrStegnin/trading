@@ -8,6 +8,7 @@ import com.ddkolesnik.trading.model.RosreestrResponse;
 import com.ddkolesnik.trading.model.dto.EgrnDTO;
 import com.ddkolesnik.trading.model.dto.EgrnDetailsDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,14 @@ public class SearchService {
 
     private final CadasterService cadasterService;
 
+    @Value("${app.api.token}")
+    private String appApiToken;
+
     public SearchService(CadasterService cadasterService) {
         this.cadasterService = cadasterService;
         webClient = WebClient.builder()
                 .baseUrl("https://apirosreestr.ru/api/cadaster")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("Token", "BBKY-DZTN-KMFV-DHPT")
                 .build();
     }
 
@@ -48,8 +51,10 @@ public class SearchService {
             return false;
         }
         RosreestrRequest request = new RosreestrRequest("normal", address, 1);
-        Mono<RosreestrResponse> mono = webClient.post()
+        Mono<RosreestrResponse> mono = webClient
+                .post()
                 .uri("/search")
+                .header("Token", appApiToken)
                 .body(Mono.just(request), RosreestrRequest.class)
                 .retrieve()
                 .bodyToMono(RosreestrResponse.class);
@@ -108,6 +113,7 @@ public class SearchService {
         RosreestrRequest request = new RosreestrRequest(cadaster.getCadNumber());
         Mono<EgrnResponse> mono = webClient.post()
                 .uri("/objectInfoFull")
+                .header("Token", appApiToken)
                 .body(Mono.just(request), RosreestrRequest.class)
                 .retrieve()
                 .bodyToMono(EgrnResponse.class);
@@ -120,8 +126,6 @@ public class SearchService {
         entities.forEach(this::getEgrnDetails);
         cadasterService.update(entities);
     }
-
-    //Тюмень Николая Ростовцева д 25 к 1
 
     /**
      * Обновить запись в базе данных
