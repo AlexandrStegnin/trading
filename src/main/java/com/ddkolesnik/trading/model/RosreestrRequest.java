@@ -20,6 +20,7 @@ public class RosreestrRequest {
     public RosreestrRequest(String mode, String query, int grouped) {
         this.mode = mode;
         this.grouped = grouped;
+        this.query = query;
     }
 
     public RosreestrRequest(String query) {
