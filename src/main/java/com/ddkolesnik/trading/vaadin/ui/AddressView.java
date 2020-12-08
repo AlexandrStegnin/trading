@@ -103,11 +103,9 @@ public class AddressView extends CustomAppLayout {
     }
 
     private void search(String address) {
-        Notification notification = new Notification("Запрос отправлен!", 2_000);
-        notification.open();
         searchService.search(address);
         searchService.updateEgrnDetails(address);
-        notification = new Notification("Данные обновлены!", 2_000);
+        Notification notification = new Notification("Данные обновлены!", 2_000);
         notification.open();
     }
 
