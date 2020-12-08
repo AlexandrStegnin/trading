@@ -42,10 +42,10 @@ public class SearchService {
      *
      * @param address полный адрес
      */
-    public void search(String address) {
+    public boolean search(String address) {
         List<CadasterEntity> entities = cadasterService.findByTag(address);
         if (!entities.isEmpty()) {
-            return;
+            return false;
         }
         RosreestrRequest request = new RosreestrRequest("normal", address, 1);
         Mono<RosreestrResponse> mono = webClient.post()
@@ -58,6 +58,7 @@ public class SearchService {
         if (response != null) {
             saveCadasterAddresses(response, address, userName);
         }
+        return true;
     }
 
     /**
