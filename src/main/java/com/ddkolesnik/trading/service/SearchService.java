@@ -95,6 +95,8 @@ public class SearchService {
         cadasterService.update(entities);
     }
 
+    //Тюмень Николая Ростовцева д 25 к 1
+
     /**
      * Обновить запись в базе данных
      *
