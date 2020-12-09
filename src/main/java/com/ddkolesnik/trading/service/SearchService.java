@@ -5,8 +5,10 @@ import com.ddkolesnik.trading.api.CadasterEntity;
 import com.ddkolesnik.trading.api.EgrnResponse;
 import com.ddkolesnik.trading.api.RosreestrRequest;
 import com.ddkolesnik.trading.api.RosreestrResponse;
+import com.ddkolesnik.trading.model.dto.CadasterDTO;
 import com.ddkolesnik.trading.model.dto.EgrnDTO;
 import com.ddkolesnik.trading.model.dto.EgrnDetailsDTO;
+import com.ddkolesnik.trading.service.client.ApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +27,8 @@ import java.util.List;
 @Service
 public class SearchService {
 
+    private final ApiClient client;
+
     private final WebClient webClient;
 
     private final CadasterService cadasterService;
@@ -32,7 +36,8 @@ public class SearchService {
     @Value("${app.api.token}")
     private String appApiToken;
 
-    public SearchService(CadasterService cadasterService) {
+    public SearchService(ApiClient client, CadasterService cadasterService) {
+        this.client = client;
         this.cadasterService = cadasterService;
         webClient = WebClient.builder()
                 .baseUrl("https://apirosreestr.ru/api/cadaster")
@@ -72,33 +77,9 @@ public class SearchService {
      * @param rosreestrResponse ответ от росреестра
      */
     private void saveCadasterAddresses(RosreestrResponse rosreestrResponse, String address, String userName) {
-        rosreestrResponse.getObject().getLands().forEach(room -> {
-            CadasterEntity entity = new CadasterEntity(room, address);
-            entity.setModifiedBy(userName);
-            cadasterService.create(entity);
-        });
-        rosreestrResponse.getObject().getBuildings().forEach(room -> {
-            CadasterEntity entity = new CadasterEntity(room, address);
-            entity.setModifiedBy(userName);
-            cadasterService.create(entity);
-        });
-        rosreestrResponse.getObject().getRooms().forEach(room -> {
-            CadasterEntity entity = new CadasterEntity(room, address);
-            entity.setModifiedBy(userName);
-            cadasterService.create(entity);
-        });
-        rosreestrResponse.getObject().getConstructions().forEach(room -> {
-            CadasterEntity entity = new CadasterEntity(room, address);
-            entity.setModifiedBy(userName);
-            cadasterService.create(entity);
-        });
-        rosreestrResponse.getObject().getQuarters().forEach(room -> {
-            CadasterEntity entity = new CadasterEntity(room, address);
-            entity.setModifiedBy(userName);
-            cadasterService.create(entity);
-        });
-        rosreestrResponse.getObject().getOthers().forEach(room -> {
-            CadasterEntity entity = new CadasterEntity(room, address);
+        List<CadasterDTO> allObjects = rosreestrResponse.getObject().getAllObjects();
+        allObjects.forEach(dto -> {
+            CadasterEntity entity = new CadasterEntity(dto, address);
             entity.setModifiedBy(userName);
             cadasterService.create(entity);
         });
