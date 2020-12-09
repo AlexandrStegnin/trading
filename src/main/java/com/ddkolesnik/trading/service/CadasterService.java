@@ -1,6 +1,6 @@
 package com.ddkolesnik.trading.service;
 
-import com.ddkolesnik.trading.model.CadasterEntity;
+import com.ddkolesnik.trading.api.CadasterEntity;
 import com.ddkolesnik.trading.repository.CadasterRepository;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package com.ddkolesnik.trading.vaadin.ui;
 
-import com.ddkolesnik.trading.model.CadasterEntity;
+import com.ddkolesnik.trading.api.CadasterEntity;
 import com.ddkolesnik.trading.service.AppUserService;
 import com.ddkolesnik.trading.service.CadasterService;
 import com.ddkolesnik.trading.service.SearchService;

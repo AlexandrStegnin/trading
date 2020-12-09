@@ -1,4 +1,4 @@
-package com.ddkolesnik.trading.model;
+package com.ddkolesnik.trading.api;
 
 import com.ddkolesnik.trading.model.dto.CadasterDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;

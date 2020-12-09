@@ -1,5 +1,6 @@
-package com.ddkolesnik.trading.model;
+package com.ddkolesnik.trading.api;
 
+import com.ddkolesnik.trading.model.BaseEntity;
 import com.ddkolesnik.trading.model.dto.CadasterDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

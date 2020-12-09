@@ -1,4 +1,4 @@
-package com.ddkolesnik.trading.model;
+package com.ddkolesnik.trading.api;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

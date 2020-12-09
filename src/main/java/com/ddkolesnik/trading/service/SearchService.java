@@ -1,10 +1,10 @@
 package com.ddkolesnik.trading.service;
 
 import com.ddkolesnik.trading.configuration.security.SecurityUtils;
-import com.ddkolesnik.trading.model.CadasterEntity;
-import com.ddkolesnik.trading.model.EgrnResponse;
-import com.ddkolesnik.trading.model.RosreestrRequest;
-import com.ddkolesnik.trading.model.RosreestrResponse;
+import com.ddkolesnik.trading.api.CadasterEntity;
+import com.ddkolesnik.trading.api.EgrnResponse;
+import com.ddkolesnik.trading.api.RosreestrRequest;
+import com.ddkolesnik.trading.api.RosreestrResponse;
 import com.ddkolesnik.trading.model.dto.EgrnDTO;
 import com.ddkolesnik.trading.model.dto.EgrnDetailsDTO;
 import lombok.extern.slf4j.Slf4j;
