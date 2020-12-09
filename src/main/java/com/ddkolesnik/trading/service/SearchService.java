@@ -1,20 +1,16 @@
 package com.ddkolesnik.trading.service;
 
-import com.ddkolesnik.trading.configuration.security.SecurityUtils;
 import com.ddkolesnik.trading.api.CadasterEntity;
 import com.ddkolesnik.trading.api.EgrnResponse;
 import com.ddkolesnik.trading.api.RosreestrRequest;
 import com.ddkolesnik.trading.api.RosreestrResponse;
+import com.ddkolesnik.trading.configuration.security.SecurityUtils;
 import com.ddkolesnik.trading.model.dto.CadasterDTO;
 import com.ddkolesnik.trading.model.dto.EgrnDTO;
 import com.ddkolesnik.trading.model.dto.EgrnDetailsDTO;
 import com.ddkolesnik.trading.service.client.ApiClient;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -29,20 +25,11 @@ public class SearchService {
 
     private final ApiClient client;
 
-    private final WebClient webClient;
-
     private final CadasterService cadasterService;
-
-    @Value("${app.api.token}")
-    private String appApiToken;
 
     public SearchService(ApiClient client, CadasterService cadasterService) {
         this.client = client;
         this.cadasterService = cadasterService;
-        webClient = WebClient.builder()
-                .baseUrl("https://apirosreestr.ru/api/cadaster")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
     }
 
     /**
@@ -56,13 +43,7 @@ public class SearchService {
             return false;
         }
         RosreestrRequest request = new RosreestrRequest("normal", address, 1);
-        Mono<RosreestrResponse> mono = webClient
-                .post()
-                .uri("/search")
-                .header("Token", appApiToken)
-                .body(Mono.just(request), RosreestrRequest.class)
-                .retrieve()
-                .bodyToMono(RosreestrResponse.class);
+        Mono<RosreestrResponse> mono = client.getRosreestrResponse(request);
         String userName = SecurityUtils.getUsername();
         RosreestrResponse response = mono.block();
         if (response != null) {
@@ -92,12 +73,7 @@ public class SearchService {
      */
     public void getEgrnDetails(CadasterEntity cadaster) {
         RosreestrRequest request = new RosreestrRequest(cadaster.getCadNumber());
-        Mono<EgrnResponse> mono = webClient.post()
-                .uri("/objectInfoFull")
-                .header("Token", appApiToken)
-                .body(Mono.just(request), RosreestrRequest.class)
-                .retrieve()
-                .bodyToMono(EgrnResponse.class);
+        Mono<EgrnResponse> mono = client.getCadasterDetails(request);
         EgrnResponse egrnResponse = mono.block();
         updateCadaster(egrnResponse, cadaster);
     }
