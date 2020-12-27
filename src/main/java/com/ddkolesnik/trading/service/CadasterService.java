@@ -28,8 +28,8 @@ public class CadasterService {
         cadasterRepository.save(entity);
     }
 
-    public List<CadasterEntity> findByTag(String address) {
-        return cadasterRepository.findByTag(address);
+    public List<CadasterEntity> findByTagLike(String address) {
+        return cadasterRepository.findByTagLike(address);
     }
 
     public void update(CadasterEntity entity) {
