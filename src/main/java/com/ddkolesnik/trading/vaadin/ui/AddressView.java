@@ -23,7 +23,12 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.ddkolesnik.trading.configuration.support.Location.ADDRESS_PAGE;
 
@@ -107,15 +112,37 @@ public class AddressView extends CustomAppLayout {
     }
 
     private void search(String address) {
-        String searchText = address == null ? customSearchText : address;
-        if (searchService.search(searchText)) {
-            searchService.updateEgrnDetails(searchText);
+        String tag = address == null ? customSearchText : address;
+        if (searchService.search(tag)) {
+            searchService.updateEgrnDetails(tag);
             dataProvider.refreshAll();
             VaadinViewUtils.showNotification("Данные обновлены!");
         } else {
             dataProvider.clearFilters();
-            dataProvider.addFilter(cadEntity -> cadEntity.getTag().equalsIgnoreCase(searchText));
+            dataProvider.addFilter(cadEntity -> compare(cadEntity, tag));
         }
+    }
+
+    /**
+     * Проверить наличие записей с тэгом в провайдере данных
+     *
+     * @param entity запись
+     * @param tag тэг
+     * @return наличие/отсутствие записи
+     */
+    private boolean compare(CadasterEntity entity, String tag) {
+        String wildCard = "\\W*";
+        String address = Arrays.stream(
+                tag
+                        .replaceAll("\\s{2,}", " ")
+                        .trim()
+                        .split("\\s"))
+                .map(String::toLowerCase)
+                .collect(Collectors.joining(wildCard));
+        address = wildCard.concat(address).concat(wildCard);
+        Pattern pattern = Pattern.compile(address);
+        Matcher matcher = pattern.matcher(entity.getTag().toLowerCase(Locale.ROOT));
+        return matcher.find();
     }
 
     private List<String> getTags() {
