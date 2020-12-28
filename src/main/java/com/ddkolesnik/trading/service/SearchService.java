@@ -55,6 +55,17 @@ public class SearchService {
     }
 
     /**
+     * Метод проверки наличия записей в базе по тэгу
+     *
+     * @param tag тэг
+     * @return результат проверки
+     */
+    public boolean existByTag(String tag) {
+        String address = prepareAddress(tag);
+        return cadasterService.existByTag(address);
+    }
+
+    /**
      * Метод сохранения полученных результатов в базу данных
      *
      * @param rosreestrResponse ответ от росреестра
@@ -67,6 +78,7 @@ public class SearchService {
             entity.setModifiedBy(userName);
             cadasterService.create(entity);
         });
+        log.info("Данные об адресах успешно записаны");
     }
 
     /**
