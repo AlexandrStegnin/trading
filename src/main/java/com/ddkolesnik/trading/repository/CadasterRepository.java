@@ -21,4 +21,6 @@ public interface CadasterRepository extends JpaRepository<CadasterEntity, Long> 
     @Query("SELECT ce FROM CadasterEntity ce WHERE LOWER(ce.tag) LIKE LOWER(:tag)")
     List<CadasterEntity> findByTagLike(@Param("tag") String tag);
 
+    @Query("SELECT COUNT(ce) FROM CadasterEntity ce WHERE LOWER(ce.tag) LIKE LOWER(:tag)")
+    long countByTag(@Param("tag") String tag);
 }

@@ -32,6 +32,10 @@ public class CadasterService {
         return cadasterRepository.findByTagLike(address);
     }
 
+    public boolean existByTag(String address) {
+        return cadasterRepository.countByTag(address) > 0;
+    }
+
     public void update(CadasterEntity entity) {
         cadasterRepository.save(entity);
     }
