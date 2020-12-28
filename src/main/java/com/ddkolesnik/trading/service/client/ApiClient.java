@@ -4,7 +4,7 @@ import com.ddkolesnik.trading.api.EgrnResponse;
 import com.ddkolesnik.trading.api.RosreestrRequest;
 import com.ddkolesnik.trading.api.RosreestrResponse;
 import com.ddkolesnik.trading.model.dto.CadasterDTO;
-import com.ddkolesnik.trading.model.dto.FiasResponse;
+import com.ddkolesnik.trading.api.FiasResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
