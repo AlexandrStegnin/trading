@@ -42,6 +42,9 @@ public class CadasterEntity extends BaseEntity {
     @Column(name = "floor")
     private String floor;
 
+    @Column(name = "split_address")
+    private String splitAddress;
+
     public CadasterEntity(CadasterDTO dto, String tag, String modifiedBy) {
         this.address = dto.getAddress();
         this.cadNumber = dto.getCadNumber();
