@@ -42,13 +42,14 @@ public class CadasterEntity extends BaseEntity {
     @Column(name = "floor")
     private String floor;
 
-    public CadasterEntity(CadasterDTO dto, String tag) {
+    public CadasterEntity(CadasterDTO dto, String tag, String modifiedBy) {
         this.address = dto.getAddress();
         this.cadNumber = dto.getCadNumber();
         this.type = dto.getType();
         this.area = dto.getArea();
         this.category = dto.getCategory();
         this.tag = tag;
+        this.setModifiedBy(modifiedBy);
     }
 
 }
