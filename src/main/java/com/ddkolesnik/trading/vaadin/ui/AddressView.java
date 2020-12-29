@@ -113,13 +113,13 @@ public class AddressView extends CustomAppLayout {
 
     private void search(String address) {
         String tag = address == null ? customSearchText : address;
-        if (searchService.search(tag)) {
-            searchService.updateEgrnDetails(tag);
-            dataProvider.refreshAll();
-            VaadinViewUtils.showNotification("Данные обновлены!");
-        } else {
+        if (searchService.existByTag(tag)) {
             dataProvider.clearFilters();
             dataProvider.addFilter(cadEntity -> compare(cadEntity, tag));
+        } else {
+            searchService.getFiasResponse(tag);
+            dataProvider.refreshAll();
+            VaadinViewUtils.showNotification("Данные обновлены!");
         }
     }
 

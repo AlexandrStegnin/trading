@@ -1,13 +1,11 @@
 package com.ddkolesnik.trading.service;
 
-import com.ddkolesnik.trading.api.CadasterEntity;
-import com.ddkolesnik.trading.api.EgrnResponse;
-import com.ddkolesnik.trading.api.RosreestrRequest;
-import com.ddkolesnik.trading.api.RosreestrResponse;
+import com.ddkolesnik.trading.api.*;
 import com.ddkolesnik.trading.configuration.security.SecurityUtils;
 import com.ddkolesnik.trading.model.dto.CadasterDTO;
 import com.ddkolesnik.trading.model.dto.EgrnDTO;
 import com.ddkolesnik.trading.model.dto.EgrnDetailsDTO;
+import com.ddkolesnik.trading.model.dto.FiasResponseDTO;
 import com.ddkolesnik.trading.service.client.ApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +13,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * @author Alexandr Stegnin
@@ -34,27 +33,6 @@ public class SearchService {
     }
 
     /**
-     * Метод поиска объекта по адресу
-     *
-     * @param tag тэг для хранения информации
-     */
-    public boolean search(String tag) {
-        String address = prepareAddress(tag);
-        List<CadasterEntity> entities = cadasterService.findByTagLike(address);
-        if (!entities.isEmpty()) {
-            return false;
-        }
-        RosreestrRequest request = new RosreestrRequest("normal", address, 1);
-        Mono<RosreestrResponse> mono = client.getRosreestrResponse(request);
-        String userName = SecurityUtils.getUsername();
-        RosreestrResponse response = mono.block();
-        if (response != null) {
-            saveCadasterAddresses(response, userName, tag);
-        }
-        return true;
-    }
-
-    /**
      * Метод проверки наличия записей в базе по тэгу
      *
      * @param tag тэг
@@ -66,38 +44,62 @@ public class SearchService {
     }
 
     /**
-     * Метод сохранения полученных результатов в базу данных
+     * Получить список доступных похожих адресов
      *
-     * @param rosreestrResponse ответ от росреестра
-     * @param tag тэг, под которым хранить инфо
+     * @param address адрес для поиска в ФИАС
      */
-    private void saveCadasterAddresses(RosreestrResponse rosreestrResponse, String userName, String tag) {
-        List<CadasterDTO> allObjects = rosreestrResponse.getObject().getAllObjects();
-        allObjects.forEach(dto -> {
-            CadasterEntity entity = new CadasterEntity(dto, tag);
-            entity.setModifiedBy(userName);
-            cadasterService.create(entity);
-        });
-        log.info("Данные об адресах успешно записаны");
+    public void getFiasResponse(String address) {
+        Mono<FiasResponse> response = client.getFiasResponse(address);
+        log.info("Получаем данные из ФИАС");
+        String userName = SecurityUtils.getUsername();
+        FiasResponse fiasResponse = response.block();
+        if (fiasResponse != null) {
+            getRosreestrInfo(fiasResponse, userName, address);
+            log.info("Закончили");
+        }
+    }
+
+    public void getRosreestrInfo(FiasResponse response, String userName, String tag) {
+        List<String> addresses = response.getResult()
+                .stream()
+                .filter(fiasResponseDTO -> fiasResponseDTO.getContentType().equalsIgnoreCase("building"))
+                .map(FiasResponseDTO::getFullName)
+                .collect(Collectors.toList());
+        log.info("Начинаем разбор адресов [{} шт], полученных из ФИАС", addresses.size());
+        addresses.forEach(address -> getRosreestrInfo(address, userName, tag));
+    }
+
+    /**
+     * Получить ответ от Росреестра по адресу
+     *  @param address адрес
+     * @param userName имя текущего пользователя
+     * @param tag
+     */
+    public void getRosreestrInfo(String address, String userName, String tag) {
+        RosreestrRequest request = new RosreestrRequest("normal", address, 1);
+        Mono<RosreestrResponse> mono = client.getRosreestrResponse(request);
+        RosreestrResponse rosreestrResponse = mono.block();
+        if (rosreestrResponse != null) {
+            log.info("Обновляем данные, полученные из Росреестра. Добавляем тип и этаж.");
+            getEgrnDetails(rosreestrResponse, userName, tag);
+        }
     }
 
     /**
      * Получить детализированную информацию по кадастровому номеру
      *
-     * @param cadaster сущность
+     * @param rosreestrResponse ответ Росреестра
      */
-    public void getEgrnDetails(CadasterEntity cadaster) {
-        RosreestrRequest request = new RosreestrRequest(cadaster.getCadNumber());
-        Mono<EgrnResponse> mono = client.getCadasterDetails(request);
-        EgrnResponse egrnResponse = mono.block();
-        updateCadaster(egrnResponse, cadaster);
-    }
-
-    public void updateEgrnDetails(String tag) {
-        String address = prepareAddress(tag);
-        List<CadasterEntity> entities = cadasterService.findByTagLike(address);
-        entities.forEach(this::getEgrnDetails);
-        cadasterService.update(entities);
+    public void getEgrnDetails(RosreestrResponse rosreestrResponse, String userName, String tag) {
+        List<CadasterDTO> allObjects = rosreestrResponse.getObject().getAllObjects();
+        log.info("Получаем детали по [{} шт] объектам", allObjects.size());
+        allObjects.forEach(dto -> {
+            CadasterEntity entity = new CadasterEntity(dto, tag, userName);
+            RosreestrRequest request = new RosreestrRequest(entity.getCadNumber());
+            Mono<EgrnResponse> mono = client.getCadasterDetails(request);
+            EgrnResponse egrnResponse = mono.block();
+            updateCadaster(egrnResponse, entity);
+        });
     }
 
     /**
@@ -117,6 +119,7 @@ public class SearchService {
                 if (detailsDTO.getFloor() != null) {
                     entity.setFloor(detailsDTO.getFloor());
                 }
+                cadasterService.create(entity);
             }
         }
     }
