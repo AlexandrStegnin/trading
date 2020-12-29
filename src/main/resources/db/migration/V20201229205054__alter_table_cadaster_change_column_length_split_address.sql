@@ -1,0 +1,1 @@
+ALTER TABLE cadaster ALTER COLUMN split_address TYPE VARCHAR(255);
