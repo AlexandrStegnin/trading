@@ -176,6 +176,7 @@ public class SearchService {
         if (splitAddress.endsWith(",")) {
             splitAddress = splitAddress.substring(0, splitAddress.length() - 1);
         }
+        splitAddress = splitAddress.replaceFirst("(\\(г\\.\\),)", "").trim();
         return splitAddress;
     }
 
