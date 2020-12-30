@@ -46,6 +46,9 @@ public class SearchService {
      * @return результат проверки
      */
     public boolean existByTag(String tag) {
+        if (tag == null) {
+            return false;
+        }
         String address = prepareAddress(tag);
         return cadasterService.existByTag(address);
     }
