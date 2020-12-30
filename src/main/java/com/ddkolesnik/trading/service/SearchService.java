@@ -7,6 +7,7 @@ import com.ddkolesnik.trading.model.dto.EgrnDTO;
 import com.ddkolesnik.trading.model.dto.EgrnDetailsDTO;
 import com.ddkolesnik.trading.model.dto.FiasResponseDTO;
 import com.ddkolesnik.trading.service.client.ApiClient;
+import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -66,6 +67,10 @@ public class SearchService {
     }
 
     public void getRosreestrInfo(FiasResponse response, String userName, String tag) {
+        if (response.getResult() == null) {
+            VaadinViewUtils.showNotification("Не удалось получить ответ от ФИАС");
+            return;
+        }
         List<String> addresses = response.getResult()
                 .stream()
                 .filter(fiasResponseDTO -> fiasResponseDTO.getContentType().equalsIgnoreCase("building"))
