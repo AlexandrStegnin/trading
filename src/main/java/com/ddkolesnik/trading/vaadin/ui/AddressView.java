@@ -45,6 +45,10 @@ public class AddressView extends CustomAppLayout {
 
     protected static final String PAGE_TITLE = "ДАННЫЕ ПО АДРЕСАМ";
 
+    private static final String HOUSE_SMALL = "(\\s+д\\s*\\.*)";
+
+    private static final String HOUSE = "(\\s+дом\\s*\\.*)";
+
     private final CadasterService cadasterService;
     private final Grid<CadasterEntity> grid;
     private final ListDataProvider<CadasterEntity> dataProvider;
@@ -112,7 +116,7 @@ public class AddressView extends CustomAppLayout {
     }
 
     private void search(String address) {
-        String tag = address == null ? customSearchText : address;
+        String tag = replaceHouse(address == null ? customSearchText : address);
         if (searchService.existByTag(tag)) {
             dataProvider.clearFilters();
             dataProvider.addFilter(cadEntity -> compare(cadEntity, tag));
@@ -149,4 +153,18 @@ public class AddressView extends CustomAppLayout {
         return cadasterService.getTags();
     }
 
+    /**
+     * Удаляем из строки поиска {д.} или {дом.}
+     *
+     * @param address адрес
+     * @return редактированный адрес
+     */
+    private String replaceHouse(String address) {
+        if (address == null) {
+            return null;
+        }
+        String actualAddress = address.replaceAll(HOUSE, " ").trim();
+        actualAddress = actualAddress.replaceAll(HOUSE_SMALL, " ");
+        return actualAddress.replaceAll("\\s{2,}", " ");
+    }
 }
