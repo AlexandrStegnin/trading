@@ -84,7 +84,7 @@ public class SearchService {
      * Получить ответ от Росреестра по адресу
      *  @param address адрес
      * @param userName имя текущего пользователя
-     * @param tag
+     * @param tag тэг под которым надо сохранить инфо
      */
     public void getRosreestrInfo(String address, String userName, String tag) {
         RosreestrRequest request = new RosreestrRequest("normal", address, 1);
