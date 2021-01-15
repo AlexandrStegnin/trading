@@ -143,7 +143,7 @@ public class TradingView extends CustomAppLayout {
 
     private void confirm() {
         tradingService.confirm(getSelectedTradingIds());
-        VaadinViewUtils.showNotification("Данные успешно подтверждениы");
+        VaadinViewUtils.showNotification("Данные успешно подтверждены");
     }
 
     private Checkbox createCheckBox(TradingEntity entity) {
