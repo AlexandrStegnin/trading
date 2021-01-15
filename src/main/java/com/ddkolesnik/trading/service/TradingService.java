@@ -5,6 +5,7 @@ import com.ddkolesnik.trading.repository.TradingRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -44,4 +45,9 @@ public class TradingService {
             tradingRepository.save(entity);
         });
     }
+
+    public void delete(Collection<String> tradingIds) {
+        tradingIds.forEach(id -> tradingRepository.delete(tradingRepository.getOne(Long.valueOf(id))));
+    }
+
 }
