@@ -70,7 +70,7 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
-        grid.addColumn(TradingEntity::getAddress)
+        grid.addColumn(TradingEntity::getCleanAddress)
                 .setHeader("АДРЕС")
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(5);
