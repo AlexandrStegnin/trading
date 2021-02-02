@@ -1,0 +1,2 @@
+ALTER TABLE trading ADD COLUMN longitude NUMERIC;
+ALTER TABLE trading ADD COLUMN latitude NUMERIC;

@@ -120,4 +120,16 @@ public class TradingEntity extends BaseEntity {
     @Column(name = "clean_address")
     private String cleanAddress;
 
+    /**
+     * Широта
+     */
+    @Column(name = "latitude")
+    private Double latitude;
+
+    /**
+     * Долгота
+     */
+    @Column(name = "longitude")
+    private Double longitude;
+
 }
