@@ -34,9 +34,13 @@ public class SearchService {
 
     private final CadasterService cadasterService;
 
-    public SearchService(ApiClient client, CadasterService cadasterService) {
+    private final DaDataService daDataService;
+
+    public SearchService(ApiClient client, CadasterService cadasterService,
+                         DaDataService daDataService) {
         this.client = client;
         this.cadasterService = cadasterService;
+        this.daDataService = daDataService;
     }
 
     /**
@@ -133,8 +137,7 @@ public class SearchService {
                 if (detailsDTO.getFloor() != null) {
                     entity.setFloor(detailsDTO.getFloor());
                 }
-                String splitAddress = splitAddress(entity.getAddress());
-                entity.setSplitAddress(splitAddress);
+                daDataService.cleanData(entity);
                 cadasterService.create(entity);
             }
         }
@@ -154,33 +157,6 @@ public class SearchService {
         }
         result.append("%");
         return result.toString();
-    }
-
-    /**
-     * Обрезать адрес до улицы и номера дома
-     *
-     * @param address исходный адрес
-     * @return обрезанный адрес
-     */
-    private String splitAddress(String address) {
-        if (address == null || address.length() <= TYUMEN.length()) {
-            return address;
-        }
-        int indexOfCity = address.indexOf(TYUMEN);
-        int indexOfApartment = address.indexOf(APARTMENT);
-        if (indexOfApartment == -1) {
-            indexOfApartment = address.indexOf(APARTMENT_SMALL);
-            if (indexOfApartment == -1) {
-                indexOfApartment = address.length();
-            }
-        }
-        String splitAddress = address.substring(0, indexOfApartment);
-        splitAddress = splitAddress.substring(indexOfCity + TYUMEN.length() + 1).trim();
-        if (splitAddress.endsWith(",")) {
-            splitAddress = splitAddress.substring(0, splitAddress.length() - 1);
-        }
-        splitAddress = splitAddress.replaceFirst("(\\(г\\.\\),)", "").trim();
-        return splitAddress;
     }
 
 }
