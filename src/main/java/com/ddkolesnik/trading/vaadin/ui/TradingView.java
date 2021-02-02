@@ -70,10 +70,10 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
-        grid.addColumn(TradingEntity::getCleanAddress)
+        grid.addColumn(this::getAddress)
                 .setHeader("АДРЕС")
                 .setTextAlign(ColumnTextAlign.CENTER)
-                .setFlexGrow(5);
+                .setFlexGrow(3);
 
         grid.addColumn(TradingEntity::getArea, "ПЛОЩАДЬ")
                 .setHeader("ПЛОЩАДЬ")
@@ -216,6 +216,10 @@ public class TradingView extends CustomAppLayout {
             }
         }
         return tradingIds;
+    }
+
+    private String getAddress(TradingEntity entity) {
+        return entity.getCleanAddress() == null ? entity.getAddress() : entity.getCleanAddress();
     }
 
 }
