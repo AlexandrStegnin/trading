@@ -4,6 +4,7 @@ import com.ddkolesnik.trading.configuration.support.Internationalization;
 import com.ddkolesnik.trading.repository.AuthRepository;
 import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.login.AbstractLogin;
 import com.vaadin.flow.component.login.LoginOverlay;
@@ -23,6 +24,7 @@ import static com.ddkolesnik.trading.configuration.support.Location.TRADING_PAGE
 @Route(value = LOGIN_PAGE)
 @PageTitle(LoginView.PAGE_TITLE)
 @Theme(value = Material.class, variant = Material.LIGHT)
+@CssImport(value = "./styles/shared-styles.css", themeFor = "vaadin-login-overlay-wrapper")
 public class LoginView extends HorizontalLayout implements HasUrlParameter<String> {
 
     protected static final String PAGE_TITLE = "АВТОРИЗАЦИЯ";
