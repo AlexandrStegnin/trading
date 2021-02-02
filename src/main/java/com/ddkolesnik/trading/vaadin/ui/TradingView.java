@@ -75,6 +75,11 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(3);
 
+        grid.addComponentColumn(this::showOnMap)
+                .setHeader("НА КАРТЕ")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(1);
+
         grid.addColumn(TradingEntity::getArea, "ПЛОЩАДЬ")
                 .setHeader("ПЛОЩАДЬ")
                 .setTextAlign(ColumnTextAlign.CENTER)
@@ -220,6 +225,21 @@ public class TradingView extends CustomAppLayout {
 
     private String getAddress(TradingEntity entity) {
         return entity.getCleanAddress() == null ? entity.getAddress() : entity.getCleanAddress();
+    }
+
+    private Anchor showOnMap(TradingEntity entity) {
+        Double lon = entity.getLongitude();
+        Double lat = entity.getLatitude();
+        if (lon == null || lat == null) {
+            return new Anchor();
+        }
+        String longitude = String.valueOf(lon).replace(",", ".");
+        String latitude = String.valueOf(lat).replace(",", ".");
+        String yaMap = "https://yandex.ru/maps/?pt=%s,%s&z=18&l=map";
+        String url = String.format(yaMap, longitude ,latitude);
+        Anchor anchor = new Anchor(url, "ПОКАЗАТЬ");
+        anchor.setTarget("_blank");
+        return anchor;
     }
 
 }
