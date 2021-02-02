@@ -20,12 +20,12 @@ public class DaDataService {
 
     public void cleanData(CadasterEntity entity) {
         Address address = daDataClient.cleanAddress(entity.getAddress());
-        entity.setAddress(prepareAddress(address));
+        entity.setSplitAddress(prepareAddress(address, false));
     }
 
     public String getCleanAddress(String address) {
         Address cleanAddress = daDataClient.cleanAddress(address);
-        return prepareAddress(cleanAddress);
+        return prepareAddress(cleanAddress, true);
     }
 
     private String getIfNull(String data) {
@@ -35,8 +35,11 @@ public class DaDataService {
         return data;
     }
 
-    private String prepareAddress(Address address) {
+    private String prepareAddress(Address address, boolean withCity) {
         String city = getIfNull(address.getCityWithType());
+        if (!withCity) {
+            city = "";
+        }
         String street = getIfNull(address.getStreetWithType());
         String house = getIfNull(address.getHouse());
         String blockType = getIfNull(address.getBlockType());
