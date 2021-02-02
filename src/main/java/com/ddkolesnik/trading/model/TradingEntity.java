@@ -114,4 +114,10 @@ public class TradingEntity extends BaseEntity {
     @Column(name = "lot_source")
     private String lotSource;
 
+    /**
+     * Очищенный адрес
+     */
+    @Column(name = "clean_address")
+    private String cleanAddress;
+
 }
