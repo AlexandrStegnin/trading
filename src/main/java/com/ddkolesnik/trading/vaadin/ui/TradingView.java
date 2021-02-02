@@ -21,6 +21,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.material.Material;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
 
@@ -34,6 +35,9 @@ import static com.ddkolesnik.trading.configuration.support.Location.TRADING_PAGE
 @PageTitle(TradingView.PAGE_TITLE)
 @Theme(value = Material.class, variant = Material.LIGHT)
 public class TradingView extends CustomAppLayout {
+
+    @Value("${yandex.map.url.template}")
+    private String yandexMapUrl;
 
     private final String SHOW_CONFIRMED = "ПОКАЗАТЬ ТОЛЬКО ПОДТВЕРЖДЁННЫЕ";
 
@@ -235,8 +239,7 @@ public class TradingView extends CustomAppLayout {
         }
         String longitude = String.valueOf(lon).replace(",", ".");
         String latitude = String.valueOf(lat).replace(",", ".");
-        String yaMap = "https://yandex.ru/maps/?pt=%s,%s&z=18&l=map";
-        String url = String.format(yaMap, longitude ,latitude);
+        String url = String.format(yandexMapUrl, longitude ,latitude);
         Anchor anchor = new Anchor(url, "ПОКАЗАТЬ");
         anchor.setTarget("_blank");
         return anchor;
