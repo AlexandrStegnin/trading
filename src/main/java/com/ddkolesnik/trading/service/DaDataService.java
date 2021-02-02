@@ -1,6 +1,6 @@
 package com.ddkolesnik.trading.service;
 
-import com.ddkolesnik.trading.model.TradingEntity;
+import com.ddkolesnik.trading.api.CadasterEntity;
 import org.springframework.stereotype.Service;
 import ru.redcom.lib.integration.api.client.dadata.DaDataClient;
 import ru.redcom.lib.integration.api.client.dadata.dto.Address;
@@ -18,28 +18,14 @@ public class DaDataService {
         this.daDataClient = daDataClient;
     }
 
-    public void cleanData(TradingEntity tradingEntity) {
-        Address address = daDataClient.cleanAddress(tradingEntity.getAddress());
-        String streetWithType = address.getStreetWithType() == null ? "" : address.getStreetWithType();
-        String houseType = address.getHouseType() == null ? "" : address.getHouseType();
-        String house = address.getHouse() == null ? "" : address.getHouse();
-        String blockType = address.getBlockType() == null ? "" : address.getBlockType();
-        String block = address.getBlock() == null ? "" : address.getBlock();
-        String cleanAddress = streetWithType + " " + houseType + " " + house + " " + blockType + " " + block;
-        tradingEntity.setCleanAddress(cleanAddress.trim());
-        tradingEntity.setLatitude(address.getGeoLat());
-        tradingEntity.setLongitude(address.getGeoLon());
-        tradingEntity.setAddress(address.getResult());
+    public void cleanData(CadasterEntity entity) {
+        Address address = daDataClient.cleanAddress(entity.getAddress());
+        entity.setAddress(prepareAddress(address));
     }
 
     public String getCleanAddress(String address) {
         Address cleanAddress = daDataClient.cleanAddress(address);
-        String city = getIfNull(cleanAddress.getCityWithType());
-        String street = getIfNull(cleanAddress.getStreetWithType());
-        String house = getIfNull(cleanAddress.getHouse());
-        String blockType = getIfNull(cleanAddress.getBlockType());
-        String block = getIfNull(cleanAddress.getBlock());
-        return String.format("%s %s %s %s %s", city, street, house, blockType, block);
+        return prepareAddress(cleanAddress);
     }
 
     private String getIfNull(String data) {
@@ -47,6 +33,17 @@ public class DaDataService {
             return "";
         }
         return data;
+    }
+
+    private String prepareAddress(Address address) {
+        String city = getIfNull(address.getCityWithType());
+        String street = getIfNull(address.getStreetWithType());
+        String house = getIfNull(address.getHouse());
+        String blockType = getIfNull(address.getBlockType());
+        String block = getIfNull(address.getBlock());
+        return String.format("%s %s %s %s %s", city, street, house, blockType, block)
+                .replaceAll("\\s{2,}", "")
+                .trim();
     }
 
 }
