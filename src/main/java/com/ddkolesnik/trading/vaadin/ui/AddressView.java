@@ -3,6 +3,7 @@ package com.ddkolesnik.trading.vaadin.ui;
 import com.ddkolesnik.trading.api.CadasterEntity;
 import com.ddkolesnik.trading.service.AppUserService;
 import com.ddkolesnik.trading.service.CadasterService;
+import com.ddkolesnik.trading.service.DaDataService;
 import com.ddkolesnik.trading.service.SearchService;
 import com.ddkolesnik.trading.vaadin.custom.CustomAppLayout;
 import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
@@ -56,10 +57,13 @@ public class AddressView extends CustomAppLayout {
     private final Button searchBtn;
     private final SearchService searchService;
     private String customSearchText;
+    private final DaDataService daDataService;
 
-    public AddressView(AppUserService userService, CadasterService cadasterService, SearchService searchService) {
+    public AddressView(AppUserService userService, CadasterService cadasterService, SearchService searchService,
+                       DaDataService daDataService) {
         super(userService);
         this.cadasterService = cadasterService;
+        this.daDataService = daDataService;
         this.grid = new Grid<>();
         this.dataProvider = new ListDataProvider<>(getAll());
         this.search = new ComboBox<>("ЗАПРОСИТЬ ИНФОРМАЦИЮ ПО АДРЕСУ");
@@ -116,7 +120,7 @@ public class AddressView extends CustomAppLayout {
     }
 
     private void search(String address) {
-        String tag = replaceHouse(address == null ? customSearchText : address);
+        String tag = daDataService.getCleanAddress(address == null ? customSearchText : address);
         if (searchService.existByTag(tag)) {
             dataProvider.clearFilters();
             dataProvider.addFilter(cadEntity -> compare(cadEntity, tag));
@@ -153,18 +157,4 @@ public class AddressView extends CustomAppLayout {
         return cadasterService.getTags();
     }
 
-    /**
-     * Удаляем из строки поиска {д.} или {дом.}
-     *
-     * @param address адрес
-     * @return редактированный адрес
-     */
-    private String replaceHouse(String address) {
-        if (address == null) {
-            return null;
-        }
-        String actualAddress = address.replaceAll(HOUSE, " ").trim();
-        actualAddress = actualAddress.replaceAll(HOUSE_SMALL, " ");
-        return actualAddress.replaceAll("\\s{2,}", " ");
-    }
 }
