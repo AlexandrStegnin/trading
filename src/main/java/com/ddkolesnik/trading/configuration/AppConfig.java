@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
+import ru.redcom.lib.integration.api.client.dadata.DaDataClient;
+import ru.redcom.lib.integration.api.client.dadata.DaDataClientFactory;
 
 /**
  * @author Alexandr Stegnin
@@ -13,6 +15,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class AppConfig {
+
+    @Value("${dadata.api.key}")
+    private String apiKey;
+
+    @Value("${dadata.secret}")
+    private String secret;
 
     @Value("${app.api.token}")
     private String appApiToken;
@@ -42,6 +50,11 @@ public class AppConfig {
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader("Token", appFiasApiToken)
                 .build();
+    }
+
+    @Bean
+    public DaDataClient daDataClient() {
+        return DaDataClientFactory.getInstance(apiKey, secret);
     }
 
 }
