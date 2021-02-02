@@ -44,7 +44,7 @@ public class TradingView extends CustomAppLayout {
     private final ListDataProvider<TradingEntity> dataProvider;
     private final CheckboxGroup<Checkbox> checkboxGroup;
     private final Set<Checkbox> items;
-    private final Button confirmBtn;
+//    private final Button confirmBtn;
     private final Button showConfirmed;
     private final Button deleteBtn;
 
@@ -55,7 +55,7 @@ public class TradingView extends CustomAppLayout {
         this.dataProvider = new ListDataProvider<>(getAll());
         this.checkboxGroup = new CheckboxGroup<>();
         this.items = new LinkedHashSet<>();
-        this.confirmBtn = new Button("ПОДТВЕРДИТЬ ВЫДЕЛЕННЫЕ", VaadinIcon.CHECK.create(), e -> confirm());
+//        this.confirmBtn = new Button("ПОДТВЕРДИТЬ ВЫДЕЛЕННЫЕ", VaadinIcon.CHECK.create(), e -> confirm());
         this.deleteBtn = new Button("УДАЛИТЬ ВЫДЕЛЕННЫЕ", VaadinIcon.TRASH.create(), e -> delete());
         this.showConfirmed = new Button(SHOW_CONFIRMED, VaadinIcon.CHECK_SQUARE_O.create(), e -> toggle());
         init();
@@ -120,12 +120,13 @@ public class TradingView extends CustomAppLayout {
             }
         });
 
-        confirmBtn.getStyle()
+//        confirmBtn.getStyle()
+//                .set("border", "1px solid")
+//                .set("margin-left", "auto");
+        deleteBtn.getStyle()
                 .set("border", "1px solid")
                 .set("margin-left", "auto");
-        deleteBtn.getStyle()
-                .set("border", "1px solid");
-        HorizontalLayout buttonsLayout = new HorizontalLayout(showConfirmed, confirmBtn, deleteBtn);
+        HorizontalLayout buttonsLayout = new HorizontalLayout(showConfirmed, /*confirmBtn,*/ deleteBtn);
         buttonsLayout.setWidthFull();
         buttonsLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
@@ -141,10 +142,10 @@ public class TradingView extends CustomAppLayout {
         return tradingService.findAll();
     }
 
-    private void confirm() {
-        tradingService.confirm(getSelectedTradingIds());
-        VaadinViewUtils.showNotification("Данные успешно подтверждены");
-    }
+//    private void confirm() {
+//        tradingService.confirm(getSelectedTradingIds());
+//        VaadinViewUtils.showNotification("Данные успешно подтверждены");
+//    }
 
     private Checkbox createCheckBox(TradingEntity entity) {
         Checkbox checkbox = new Checkbox();
