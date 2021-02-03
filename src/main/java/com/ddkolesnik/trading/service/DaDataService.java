@@ -21,6 +21,9 @@ public class DaDataService {
     public void cleanData(CadasterEntity entity) {
         Address address = daDataClient.cleanAddress(entity.getAddress());
         entity.setSplitAddress(prepareAddress(address, false));
+        if (address.getResult() != null) {
+            entity.setAddress(address.getResult());
+        }
     }
 
     public String getCleanAddress(String address) {
