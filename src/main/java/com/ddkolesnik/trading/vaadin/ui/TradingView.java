@@ -110,6 +110,11 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(1);
 
+        grid.addColumn(TradingEntity::getComment, "КОММЕНТАРИЙ")
+                .setHeader("КОММЕНТАРИЙ")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setFlexGrow(5);
+
         Checkbox selectAll = createSelectAll();
 
         grid.addComponentColumn(this::createCheckBox)
