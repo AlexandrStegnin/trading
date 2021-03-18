@@ -4,6 +4,7 @@ import com.ddkolesnik.trading.configuration.support.OperationEnum;
 import com.ddkolesnik.trading.model.TradingEntity;
 import com.ddkolesnik.trading.service.AppUserService;
 import com.ddkolesnik.trading.service.TradingService;
+import com.ddkolesnik.trading.service.TrelloService;
 import com.ddkolesnik.trading.vaadin.custom.CustomAppLayout;
 import com.ddkolesnik.trading.vaadin.form.TradingForm;
 import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
@@ -54,10 +55,12 @@ public class TradingView extends CustomAppLayout {
     private final Button showConfirmed;
     private final Button deleteBtn;
     private TradingForm tradingForm;
+    private final TrelloService trelloService;
 
-    public TradingView(TradingService tradingService, AppUserService userService) {
+    public TradingView(TradingService tradingService, AppUserService userService, TrelloService trelloService) {
         super(userService);
         this.tradingService = tradingService;
+        this.trelloService = trelloService;
         this.grid = new Grid<>();
         this.dataProvider = new ListDataProvider<>(getAll());
         this.checkboxGroup = new CheckboxGroup<>();
@@ -259,6 +262,10 @@ public class TradingView extends CustomAppLayout {
 
     private void reload(final boolean isClosed, final boolean isNotCanceled) {
         if (isClosed && isNotCanceled) dataProvider.refreshAll();
+    }
+
+    private void sendToTrello(TradingEntity tradingEntity) {
+        trelloService.createCard(tradingEntity);
     }
 
 }
