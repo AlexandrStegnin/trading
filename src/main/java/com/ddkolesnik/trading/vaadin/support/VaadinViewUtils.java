@@ -8,6 +8,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.server.InputStreamFactory;
 import com.vaadin.flow.server.StreamResource;
@@ -44,6 +45,15 @@ public class VaadinViewUtils {
         delete.setIcon(deleteIcon);
         delete.addClickListener(deleteListener);
         actions.add(edit, delete);
+        return actions;
+    }
+
+    public static Div makeEditColumnAction(ComponentEventListener<ClickEvent<Button>> editListener) {
+        Div actions = new Div();
+        Button edit = new Button();
+        edit.setIcon(VaadinIcon.EDIT.create());
+        edit.addClickListener(editListener);
+        actions.add(edit);
         return actions;
     }
 
