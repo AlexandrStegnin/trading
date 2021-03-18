@@ -132,4 +132,10 @@ public class TradingEntity extends BaseEntity {
     @Column(name = "longitude")
     private Double longitude;
 
+    /**
+     * Комментарий
+     */
+    @Column(name = "comment")
+    private String comment;
+
 }

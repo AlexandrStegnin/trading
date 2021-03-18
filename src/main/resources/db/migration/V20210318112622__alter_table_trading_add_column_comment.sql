@@ -1,0 +1,1 @@
+ALTER TABLE trading ADD COLUMN comment VARCHAR(4000) NULL;
