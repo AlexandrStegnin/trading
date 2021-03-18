@@ -34,6 +34,18 @@ public class AppConfig {
     @Value("${app.api.fias.token}")
     private String appFiasApiToken;
 
+    @Value("${trello.api.url}")
+    private String trelloApiUrl;
+
+    @Value("${trello.api.token}")
+    private String trelloToken;
+
+    @Value("${trello.api.key}")
+    private String trelloKey;
+
+    @Value("${trello.api.id.list}")
+    private String trelloIdList;
+
     @Bean
     public WebClient webClient() {
         return WebClient.builder()
@@ -49,6 +61,15 @@ public class AppConfig {
                 .baseUrl(fiasApiBaseUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader("Token", appFiasApiToken)
+                .build();
+    }
+
+    @Bean
+    public WebClient trelloWebClient() {
+        String url = trelloApiUrl + "key=" + trelloKey + "&token=" + trelloToken + "&idList=" + trelloIdList;
+        return WebClient.builder()
+                .baseUrl(url)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
 
