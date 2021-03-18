@@ -1,9 +1,11 @@
 package com.ddkolesnik.trading.vaadin.ui;
 
+import com.ddkolesnik.trading.configuration.support.OperationEnum;
 import com.ddkolesnik.trading.model.TradingEntity;
 import com.ddkolesnik.trading.service.AppUserService;
 import com.ddkolesnik.trading.service.TradingService;
 import com.ddkolesnik.trading.vaadin.custom.CustomAppLayout;
+import com.ddkolesnik.trading.vaadin.form.TradingForm;
 import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -11,6 +13,7 @@ import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -48,9 +51,9 @@ public class TradingView extends CustomAppLayout {
     private final ListDataProvider<TradingEntity> dataProvider;
     private final CheckboxGroup<Checkbox> checkboxGroup;
     private final Set<Checkbox> items;
-//    private final Button confirmBtn;
     private final Button showConfirmed;
     private final Button deleteBtn;
+    private TradingForm tradingForm;
 
     public TradingView(TradingService tradingService, AppUserService userService) {
         super(userService);
@@ -59,7 +62,6 @@ public class TradingView extends CustomAppLayout {
         this.dataProvider = new ListDataProvider<>(getAll());
         this.checkboxGroup = new CheckboxGroup<>();
         this.items = new LinkedHashSet<>();
-//        this.confirmBtn = new Button("ПОДТВЕРДИТЬ ВЫДЕЛЕННЫЕ", VaadinIcon.CHECK.create(), e -> confirm());
         this.deleteBtn = new Button("УДАЛИТЬ ВЫДЕЛЕННЫЕ", VaadinIcon.TRASH.create(), e -> delete());
         this.showConfirmed = new Button(SHOW_CONFIRMED, VaadinIcon.CHECK_SQUARE_O.create(), e -> toggle());
         init();
@@ -115,6 +117,12 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(5);
 
+        grid.addComponentColumn(taskStatus -> VaadinViewUtils.makeEditColumnAction(
+                e -> showTradingForm(taskStatus)))
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setEditorComponent(new Div())
+                .setFlexGrow(1);
+
         Checkbox selectAll = createSelectAll();
 
         grid.addComponentColumn(this::createCheckBox)
@@ -134,13 +142,10 @@ public class TradingView extends CustomAppLayout {
             }
         });
 
-//        confirmBtn.getStyle()
-//                .set("border", "1px solid")
-//                .set("margin-left", "auto");
         deleteBtn.getStyle()
                 .set("border", "1px solid")
                 .set("margin-left", "auto");
-        HorizontalLayout buttonsLayout = new HorizontalLayout(showConfirmed, /*confirmBtn,*/ deleteBtn);
+        HorizontalLayout buttonsLayout = new HorizontalLayout(showConfirmed, deleteBtn);
         buttonsLayout.setWidthFull();
         buttonsLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         buttonsLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
@@ -155,11 +160,6 @@ public class TradingView extends CustomAppLayout {
     private List<TradingEntity> getAll() {
         return tradingService.findAll();
     }
-
-//    private void confirm() {
-//        tradingService.confirm(getSelectedTradingIds());
-//        VaadinViewUtils.showNotification("Данные успешно подтверждены");
-//    }
 
     private Checkbox createCheckBox(TradingEntity entity) {
         Checkbox checkbox = new Checkbox();
@@ -248,6 +248,17 @@ public class TradingView extends CustomAppLayout {
         Anchor anchor = new Anchor(url, "ПОКАЗАТЬ");
         anchor.setTarget("_blank");
         return anchor;
+    }
+
+    private void showTradingForm(TradingEntity tradingEntity) {
+        TradingForm tradingForm = new TradingForm(OperationEnum.UPDATE, tradingEntity, tradingService);
+        this.tradingForm = tradingForm;
+        tradingForm.addOpenedChangeListener(event -> reload(!event.isOpened(), !this.tradingForm.isCanceled()));
+        tradingForm.open();
+    }
+
+    private void reload(final boolean isClosed, final boolean isNotCanceled) {
+        if (isClosed && isNotCanceled) dataProvider.refreshAll();
     }
 
 }
