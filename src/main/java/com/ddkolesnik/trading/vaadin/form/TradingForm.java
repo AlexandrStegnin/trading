@@ -7,7 +7,6 @@ import com.ddkolesnik.trading.command.trading.UpdateTradingCommand;
 import com.ddkolesnik.trading.configuration.support.OperationEnum;
 import com.ddkolesnik.trading.model.TradingEntity;
 import com.ddkolesnik.trading.service.TradingService;
-import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -16,6 +15,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+
+import java.util.Locale;
 
 
 /**
@@ -26,8 +27,7 @@ public class TradingForm extends Dialog {
 
     private final TradingService tradingService;
     private final TradingEntity tradingEntity;
-    private final TextField appName;
-    private final TextField token;
+    private final TextField comment;
     private final Binder<TradingEntity> tradingBinder;
     private final OperationEnum operation;
     private final Button cancel;
@@ -37,14 +37,12 @@ public class TradingForm extends Dialog {
     private boolean canceled = false;
 
     public TradingForm(OperationEnum operation, TradingEntity tradingEntity, TradingService tradingService) {
-        this.appName = new TextField("НАЗВАНИЕ ПРИЛОЖЕНИЯ");
-        this.token = new TextField("ТОКЕН");
+        this.comment = new TextField("КОММЕНТАРИЙ");
         this.tradingBinder = new BeanValidationBinder<>(TradingEntity.class);
         this.tradingService = tradingService;
         this.operation = operation;
-        this.submit = VaadinViewUtils.createButton(
-                operation.name.toUpperCase(), "", "submit", "8px 10px 8px 10px");
-        this.cancel = VaadinViewUtils.createButton("ОТМЕНИТЬ", "", "cancel", "8px 10px 8px 10px");
+        this.submit = new Button(operation.getName().toUpperCase(Locale.ROOT));
+        this.cancel = new Button("ОТМЕНИТЬ");
         this.buttons = new HorizontalLayout();
         this.content = new VerticalLayout();
         this.tradingEntity = tradingEntity;
@@ -55,17 +53,14 @@ public class TradingForm extends Dialog {
         prepareButtons(operation);
         stylizeForm();
         buttons.add(submit, cancel);
-        content.add(appName, token, buttons);
+        content.add(comment, buttons);
         add(content);
         tradingBinder.setBean(tradingEntity);
         tradingBinder.bindInstanceFields(this);
     }
 
     private void executeCommand(Command command) {
-        if (operation.compareTo(OperationEnum.DELETE) == 0) {
-            command.execute();
-            this.close();
-        } else if (tradingBinder.writeBeanIfValid(tradingEntity)) {
+        if (tradingBinder.writeBeanIfValid(tradingEntity)) {
             command.execute();
             this.close();
         }
@@ -94,18 +89,16 @@ public class TradingForm extends Dialog {
     }
 
     private void stylizeForm() {
-        appName.setPlaceholder("ВВЕДИТЕ НАЗВАНИЕ");
-        appName.setRequiredIndicatorVisible(true);
-        appName.setWidthFull();
-        token.setWidthFull();
-        token.setReadOnly(true);
+        comment.setPlaceholder("ВВЕДИТЕ КОММЕНТАРИЙ");
+        comment.setRequiredIndicatorVisible(true);
+        comment.setWidthFull();
 
         buttons.setWidthFull();
         buttons.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
 
         content.setHeightFull();
         setWidth("400px");
-        setHeightFull();
+        setHeight("200px");
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
     }
