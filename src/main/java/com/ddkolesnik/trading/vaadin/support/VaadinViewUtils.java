@@ -75,7 +75,7 @@ public class VaadinViewUtils {
         return actions;
     }
 
-    public static Dialog initConfirmDialog(String message) {
+    public static Dialog initConfirmDialog(String message, Button ok) {
         Dialog dialog = new Dialog();
         Div textDiv = new Div();
         textDiv.getStyle().set("padding", "10px");
@@ -84,9 +84,8 @@ public class VaadinViewUtils {
         dialog.setCloseOnEsc(false);
         dialog.setCloseOnOutsideClick(false);
         dialog.add(textDiv);
-        Button confirmButton = new Button("Да", event -> dialog.close());
         Button cancelButton = new Button("Нет", event -> dialog.close());
-        Div buttons = new Div(confirmButton, cancelButton);
+        Div buttons = new Div(ok, cancelButton);
         buttons.getStyle()
                 .set("display", "flex")
                 .set("justify-content", "flex-end");
