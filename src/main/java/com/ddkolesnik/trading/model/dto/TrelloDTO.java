@@ -16,9 +16,6 @@ public class TrelloDTO {
     @JsonProperty("name")
     String name;
 
-    @JsonProperty("idMembers")
-    String[] idMembers;
-
     @JsonProperty("desc")
     String description;
 
