@@ -58,11 +58,11 @@ public class VaadinViewUtils {
         return actions;
     }
 
-    public static Div makeColumnAction(ComponentEventListener<ClickEvent<Button>> editListener, VaadinIcon icon) {
+    public static Div makeColumnAction(ComponentEventListener<ClickEvent<Button>> listener, VaadinIcon icon) {
         Div actions = new Div();
         Button action = new Button();
         action.setIcon(icon.create());
-        action.addClickListener(editListener);
+        action.addClickListener(listener);
         actions.add(action);
         return actions;
     }
