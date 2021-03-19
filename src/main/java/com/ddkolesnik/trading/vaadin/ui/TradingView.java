@@ -11,6 +11,7 @@ import com.ddkolesnik.trading.vaadin.support.VaadinViewUtils;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
@@ -120,10 +121,17 @@ public class TradingView extends CustomAppLayout {
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(5);
 
-        grid.addComponentColumn(taskStatus -> VaadinViewUtils.makeEditColumnAction(
-                e -> showTradingForm(taskStatus)))
+        grid.addComponentColumn(trading -> VaadinViewUtils.makeEditColumnAction(
+                e -> showTradingForm(trading)))
                 .setTextAlign(ColumnTextAlign.CENTER)
                 .setEditorComponent(new Div())
+                .setFlexGrow(1);
+
+        grid.addComponentColumn(trading -> VaadinViewUtils.makeColumnAction(
+                e -> showDialog(trading), VaadinIcon.SHARE_SQUARE))
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setEditorComponent(new Div())
+                .setHeader("В TRELLO")
                 .setFlexGrow(1);
 
         Checkbox selectAll = createSelectAll();
@@ -266,6 +274,18 @@ public class TradingView extends CustomAppLayout {
 
     private void sendToTrello(TradingEntity tradingEntity) {
         trelloService.createCard(tradingEntity);
+    }
+
+    private void showDialog(TradingEntity entity) {
+        Button ok = new Button("Да");
+        Dialog dialog = VaadinViewUtils.initConfirmDialog("Переместить объект на доску Trello?", ok);
+        ok.addClickListener(event -> {
+            sendToTrello(entity);
+            dialog.close();
+            tradingService.delete(entity);
+            VaadinViewUtils.showNotification("Объект успешно перемещён в TRELLO");
+        });
+        dialog.open();
     }
 
 }
