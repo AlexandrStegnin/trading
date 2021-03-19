@@ -3,6 +3,7 @@ package com.ddkolesnik.trading.vaadin.support;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Html;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
@@ -57,6 +58,15 @@ public class VaadinViewUtils {
         return actions;
     }
 
+    public static Div makeColumnAction(ComponentEventListener<ClickEvent<Button>> editListener, VaadinIcon icon) {
+        Div actions = new Div();
+        Button action = new Button();
+        action.setIcon(icon.create());
+        action.addClickListener(editListener);
+        actions.add(action);
+        return actions;
+    }
+
     public static Div createDetailsColumnButton(ComponentEventListener<ClickEvent<Button>> clickListener) {
         Div actions = new Div();
         Button details = new Button("ПОДРОБНЕЙ");
@@ -65,10 +75,22 @@ public class VaadinViewUtils {
         return actions;
     }
 
-    public static Dialog initDialog() {
+    public static Dialog initConfirmDialog(String message) {
         Dialog dialog = new Dialog();
+        Div textDiv = new Div();
+        textDiv.getStyle().set("padding", "10px");
+        Text text = new Text(message);
+        textDiv.add(text);
         dialog.setCloseOnEsc(false);
         dialog.setCloseOnOutsideClick(false);
+        dialog.add(textDiv);
+        Button confirmButton = new Button("Да", event -> dialog.close());
+        Button cancelButton = new Button("Нет", event -> dialog.close());
+        Div buttons = new Div(confirmButton, cancelButton);
+        buttons.getStyle()
+                .set("display", "flex")
+                .set("justify-content", "flex-end");
+        dialog.add(buttons);
         return dialog;
     }
 
