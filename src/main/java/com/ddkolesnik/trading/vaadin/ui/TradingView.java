@@ -277,13 +277,13 @@ public class TradingView extends CustomAppLayout {
     }
 
     private void showDialog(TradingEntity entity) {
-        Button ok = new Button("Да");
-        Dialog dialog = VaadinViewUtils.initConfirmDialog("Переместить объект на доску Trello?", ok);
+        Button ok = new Button("ДА");
+        Dialog dialog = VaadinViewUtils.initConfirmDialog("ПЕРЕМЕСТИТЬ ОБЪЕКТ НА ДОСКУ TRELLO?", ok);
         ok.addClickListener(event -> {
             sendToTrello(entity);
             dialog.close();
             tradingService.delete(entity);
-            VaadinViewUtils.showNotification("Объект успешно перемещён в TRELLO");
+            VaadinViewUtils.showNotification("ОБЪЕКТ УСПЕШНО ПЕРЕМЕЩЁН В TRELLO");
         });
         dialog.open();
     }

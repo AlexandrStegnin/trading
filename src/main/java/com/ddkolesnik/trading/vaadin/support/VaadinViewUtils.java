@@ -84,7 +84,7 @@ public class VaadinViewUtils {
         dialog.setCloseOnEsc(false);
         dialog.setCloseOnOutsideClick(false);
         dialog.add(textDiv);
-        Button cancelButton = new Button("Нет", event -> dialog.close());
+        Button cancelButton = new Button("НЕТ", event -> dialog.close());
         Div buttons = new Div(ok, cancelButton);
         buttons.getStyle()
                 .set("display", "flex")
