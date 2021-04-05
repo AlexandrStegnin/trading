@@ -55,4 +55,15 @@ public class CadasterEntity extends BaseEntity {
         this.setModifiedBy(modifiedBy);
     }
 
+    public CadasterEntity(KadnetData dto, String tag, String modifiedBy) {
+        this.address = dto.getAddress();
+        this.cadNumber = dto.getKadNumber();
+        this.type = dto.getObjectType();
+        this.area = dto.getArea().toString();
+        this.category = dto.getName();
+        this.tag = tag;
+        this.floor = dto.getFloor();
+        this.setModifiedBy(modifiedBy);
+    }
+
 }
