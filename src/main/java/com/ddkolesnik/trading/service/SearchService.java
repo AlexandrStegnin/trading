@@ -88,7 +88,7 @@ public class SearchService {
      * @param tag тэг под которым надо сохранить инфо
      */
     private void getRosreestrInfo(String address, String userName, String tag) {
-        RosreestrRequest request = new RosreestrRequest("normal", address, 1);
+        RosreestrRequest request = new RosreestrRequest("normal", address, 0);
         Mono<RosreestrResponse> mono = client.getRosreestrResponse(request);
         RosreestrResponse rosreestrResponse = mono.block();
         if (rosreestrResponse != null) {
