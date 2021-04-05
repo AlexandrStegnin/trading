@@ -1,10 +1,7 @@
 package com.ddkolesnik.trading.service.client;
 
-import com.ddkolesnik.trading.api.EgrnResponse;
-import com.ddkolesnik.trading.api.RosreestrRequest;
-import com.ddkolesnik.trading.api.RosreestrResponse;
+import com.ddkolesnik.trading.api.*;
 import com.ddkolesnik.trading.model.dto.CadasterDTO;
-import com.ddkolesnik.trading.api.FiasResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -24,9 +21,13 @@ public class ApiClient {
     @Qualifier("fiasWebClient")
     private final WebClient fiasWebClient;
 
-    public ApiClient(WebClient webClient, WebClient fiasWebClient) {
+    @Qualifier("kadnetWebClient")
+    private final WebClient kadnetWebClient;
+
+    public ApiClient(WebClient webClient, WebClient fiasWebClient, WebClient kadnetWebClient) {
         this.webClient = webClient;
         this.fiasWebClient = fiasWebClient;
+        this.kadnetWebClient = kadnetWebClient;
     }
 
     public Mono<RosreestrResponse> getRosreestrResponse(RosreestrRequest request) {
@@ -58,6 +59,15 @@ public class ApiClient {
                         .build())
                 .retrieve()
                 .bodyToMono(FiasResponse.class);
+    }
+
+    public Mono<KadnetResponse> getKadnetResponse(String query) {
+        return kadnetWebClient.post()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("Query", query)
+                        .build())
+                .retrieve()
+                .bodyToMono(KadnetResponse.class);
     }
 
     public List<CadasterDTO> convert(RosreestrResponse response) {
