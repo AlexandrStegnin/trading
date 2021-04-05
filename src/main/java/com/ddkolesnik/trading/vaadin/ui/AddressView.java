@@ -125,7 +125,7 @@ public class AddressView extends CustomAppLayout {
             dataProvider.clearFilters();
             dataProvider.addFilter(cadEntity -> compare(cadEntity, tag));
         } else {
-            searchService.getFiasResponse(tag);
+            searchService.getKadnetResponse(tag);
             dataProvider.refreshAll();
             VaadinViewUtils.showNotification("Данные обновлены!");
         }
