@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -67,6 +68,22 @@ public class SearchService {
         }
     }
 
+    /**
+     * Получить список доступных похожих адресов
+     *
+     * @param address адрес для поиска в ФИАС
+     */
+    public void getKadnetResponse(String address) {
+        Mono<KadnetResponse> response = client.getKadnetResponse(address);
+        log.info("Получаем данные из КАДНЕТ");
+        String userName = SecurityUtils.getUsername();
+        KadnetResponse kadnetResponse = response.block();
+        if (kadnetResponse != null) {
+            getRosreestrInfo(kadnetResponse, userName, address);
+            log.info("Закончили");
+        }
+    }
+
     private void getRosreestrInfo(FiasResponse response, String userName, String tag) {
         if (response.getResult() == null) {
             VaadinViewUtils.showNotification("Не удалось получить ответ от ФИАС");
@@ -81,6 +98,24 @@ public class SearchService {
         addresses.forEach(address -> getRosreestrInfo(address, userName, tag));
     }
 
+    private void getRosreestrInfo(KadnetResponse response, String userName, String tag) {
+        if (response.getResult() == null) {
+            VaadinViewUtils.showNotification("Не удалось получить ответ от Каднет");
+            return;
+        }
+        List<KadnetData> kadnetData = response.getData()
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(data -> data.getObjectType().equalsIgnoreCase("Помещение"))
+                .collect(Collectors.toList());
+        log.info("Начинаем разбор адресов [{} шт], полученных из КАДНЕТ", kadnetData.size());
+        kadnetData.forEach(data -> {
+            CadasterEntity entity = new CadasterEntity(data, tag, userName);
+            daDataService.cleanData(entity);
+            cadasterService.create(entity);
+        });
+    }
+
     /**
      * Получить ответ от Росреестра по адресу
      *  @param address адрес
@@ -88,10 +123,14 @@ public class SearchService {
      * @param tag тэг под которым надо сохранить инфо
      */
     private void getRosreestrInfo(String address, String userName, String tag) {
-        RosreestrRequest request = new RosreestrRequest("normal", address, 0);
+        RosreestrRequest request = new RosreestrRequest("normal", address, 1);
         Mono<RosreestrResponse> mono = client.getRosreestrResponse(request);
         RosreestrResponse rosreestrResponse = mono.block();
         if (rosreestrResponse != null) {
+            if (rosreestrResponse.getError().toString().contains("SEARCH_OVERLIMIT")) {
+                VaadinViewUtils.showNotification("Превышен лимит запросов в Росреестр (apiegrn.ru)");
+                return;
+            }
             log.info("Обновляем данные, полученные из Росреестра. Добавляем тип и этаж.");
             getEgrnDetails(rosreestrResponse, userName, tag);
         }
