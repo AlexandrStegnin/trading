@@ -24,12 +24,6 @@ import java.util.stream.Collectors;
 @Service
 public class SearchService {
 
-    private static final String TYUMEN = "Тюмень";
-
-    private static final String APARTMENT_SMALL = "кв.";
-
-    private static final String APARTMENT = "квартира";
-
     private final ApiClient client;
 
     private final CadasterService cadasterService;
@@ -73,7 +67,7 @@ public class SearchService {
         }
     }
 
-    public void getRosreestrInfo(FiasResponse response, String userName, String tag) {
+    private void getRosreestrInfo(FiasResponse response, String userName, String tag) {
         if (response.getResult() == null) {
             VaadinViewUtils.showNotification("Не удалось получить ответ от ФИАС");
             return;
@@ -93,7 +87,7 @@ public class SearchService {
      * @param userName имя текущего пользователя
      * @param tag тэг под которым надо сохранить инфо
      */
-    public void getRosreestrInfo(String address, String userName, String tag) {
+    private void getRosreestrInfo(String address, String userName, String tag) {
         RosreestrRequest request = new RosreestrRequest("normal", address, 1);
         Mono<RosreestrResponse> mono = client.getRosreestrResponse(request);
         RosreestrResponse rosreestrResponse = mono.block();
@@ -108,7 +102,7 @@ public class SearchService {
      *
      * @param rosreestrResponse ответ Росреестра
      */
-    public void getEgrnDetails(RosreestrResponse rosreestrResponse, String userName, String tag) {
+    private void getEgrnDetails(RosreestrResponse rosreestrResponse, String userName, String tag) {
         List<CadasterDTO> allObjects = rosreestrResponse.getObject().getAllObjects();
         log.info("Получаем детали по [{} шт] объектам", allObjects.size());
         allObjects.forEach(dto -> {
