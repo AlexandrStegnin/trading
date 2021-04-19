@@ -1,5 +1,6 @@
 package com.ddkolesnik.trading.service;
 
+import com.ddkolesnik.trading.configuration.support.State;
 import com.ddkolesnik.trading.model.TradingEntity;
 import com.ddkolesnik.trading.repository.TradingRepository;
 import org.springframework.stereotype.Service;
@@ -7,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Alexandr Stegnin
@@ -48,6 +50,10 @@ public class TradingService {
 
     public void delete(Collection<String> tradingIds) {
         tradingIds.forEach(id -> tradingRepository.delete(tradingRepository.getOne(Long.valueOf(id))));
+    }
+
+    public List<TradingEntity> findByIdIn(List<Long> ids) {
+        return tradingRepository.findByIdIn(ids);
     }
 
 }
