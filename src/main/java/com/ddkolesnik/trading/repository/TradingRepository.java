@@ -16,4 +16,6 @@ public interface TradingRepository extends JpaRepository<TradingEntity, Long> {
 
     List<TradingEntity> findByIdIn(Collection<Long> ids);
 
+    List<TradingEntity> findByState(int state);
+
 }

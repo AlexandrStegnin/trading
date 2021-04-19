@@ -4,7 +4,6 @@ import com.ddkolesnik.trading.configuration.support.State;
 import com.ddkolesnik.trading.model.TradingEntity;
 import com.ddkolesnik.trading.repository.TradingRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +23,7 @@ public class TradingService {
     }
 
     public List<TradingEntity> findAll() {
-        return tradingRepository.findAll();
+        return tradingRepository.findByState(State.ACTIVE.getId());
     }
 
     public TradingEntity create(TradingEntity tradingEntity) {
