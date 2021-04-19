@@ -40,15 +40,6 @@ public class TradingService {
         tradingRepository.save(tradingEntity);
     }
 
-    @Transactional
-    public void confirm(List<String> ids) {
-        ids.forEach(id -> {
-            TradingEntity entity = tradingRepository.getOne(Long.valueOf(id));
-            entity.setConfirmed(true);
-            tradingRepository.save(entity);
-        });
-    }
-
     public void delete(Collection<String> tradingIds) {
         List<Long> ids = tradingIds.stream()
                 .map(Long::valueOf)
