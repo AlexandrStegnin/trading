@@ -1,0 +1,1 @@
+ALTER TABLE trading ADD COLUMN state smallint NOT NULL DEFAULT 1;
