@@ -138,4 +138,10 @@ public class TradingEntity extends BaseEntity {
     @Column(name = "comment")
     private String comment;
 
+    /**
+     * Состояние записи (активная/архивная)
+     */
+    @Column(name = "state")
+    private int state;
+
 }
