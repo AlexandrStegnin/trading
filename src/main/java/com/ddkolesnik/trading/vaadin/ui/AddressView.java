@@ -46,10 +46,6 @@ public class AddressView extends CustomAppLayout {
 
     protected static final String PAGE_TITLE = "ДАННЫЕ ПО АДРЕСАМ";
 
-    private static final String HOUSE_SMALL = "(\\s+д\\s*\\.*)";
-
-    private static final String HOUSE = "(\\s+дом\\s*\\.*)";
-
     private final CadasterService cadasterService;
     private final Grid<CadasterEntity> grid;
     private final ListDataProvider<CadasterEntity> dataProvider;
@@ -59,8 +55,8 @@ public class AddressView extends CustomAppLayout {
     private String customSearchText;
     private final DaDataService daDataService;
 
-    public AddressView(AppUserService userService, CadasterService cadasterService, SearchService searchService,
-                       DaDataService daDataService) {
+    public AddressView(AppUserService userService, CadasterService cadasterService,
+                       SearchService searchService, DaDataService daDataService) {
         super(userService);
         this.cadasterService = cadasterService;
         this.daDataService = daDataService;
