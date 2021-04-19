@@ -43,15 +43,11 @@ public class TradingService {
         List<Long> ids = tradingIds.stream()
                 .map(Long::valueOf)
                 .collect(Collectors.toList());
-        List<TradingEntity> entities = findByIdIn(ids);
+        List<TradingEntity> entities = tradingRepository.findByIdIn(ids);
         entities.forEach(entity -> {
             entity.setState(State.ARCHIVE.getId());
             tradingRepository.save(entity);
         });
-    }
-    
-    public List<TradingEntity> findByIdIn(List<Long> ids) {
-        return tradingRepository.findByIdIn(ids);
     }
 
 }
