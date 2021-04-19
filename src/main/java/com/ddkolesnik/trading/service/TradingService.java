@@ -36,7 +36,8 @@ public class TradingService {
     }
 
     public void delete(TradingEntity tradingEntity) {
-        tradingRepository.delete(tradingEntity);
+        tradingEntity.setState(State.ARCHIVE.getId());
+        tradingRepository.save(tradingEntity);
     }
 
     @Transactional
@@ -49,9 +50,16 @@ public class TradingService {
     }
 
     public void delete(Collection<String> tradingIds) {
-        tradingIds.forEach(id -> tradingRepository.delete(tradingRepository.getOne(Long.valueOf(id))));
+        List<Long> ids = tradingIds.stream()
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+        List<TradingEntity> entities = findByIdIn(ids);
+        entities.forEach(entity -> {
+            entity.setState(State.ARCHIVE.getId());
+            tradingRepository.save(entity);
+        });
     }
-
+    
     public List<TradingEntity> findByIdIn(List<Long> ids) {
         return tradingRepository.findByIdIn(ids);
     }
